@@ -1,12 +1,11 @@
-package com.example.akginakwon.util.builder;
+package com.example.bwtools.android.builder;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import com.example.akginakwon.ui.main.buyrent.select.Activity_SelectCategory;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 public abstract class RecyclerTouchBuilder {
     private final String TAG ="RecyclerTouchBuilder";

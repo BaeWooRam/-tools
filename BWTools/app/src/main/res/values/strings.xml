@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">BWTools</string>
+    <!--구글 로그인-->
     <string name="server_client_id"></string>
+
+    <string name="naver_login_client_id"></string>
+    <string name="naver_login_client_secret"></string>
+
+    <!--네이버 로그인-->
+    <string name="naver_local_client_id"></string>
+    <string name="naver_local_client_secret"></string>
 </resources>

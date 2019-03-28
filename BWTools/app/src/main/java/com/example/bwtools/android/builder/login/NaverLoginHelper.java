@@ -1,17 +1,14 @@
-package com.example.akginakwon.data.login;
+package com.example.bwtools.android.builder.login;
+
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
-import com.example.akginakwon.R;
-import com.example.akginakwon.data.NaverAPIHelper;
-import com.example.akginakwon.ui.common.AkgiApplication;
+import com.example.bwtools.R;
 import com.nhn.android.naverlogin.OAuthLogin;
 import com.nhn.android.naverlogin.OAuthLoginHandler;
-import com.nhn.android.naverlogin.ui.view.OAuthLoginButton;
 
 public abstract class NaverLoginHelper {
     private static final String TAG = "OAuthSampleActivity";
@@ -22,7 +19,6 @@ public abstract class NaverLoginHelper {
 
     private OAuthLogin mOAuthLoginInstance;
     private Activity mContext;
-    private AkgiApplication mApplication;
 
 
     public NaverLoginHelper setContext(Activity mContext) {
@@ -30,10 +26,9 @@ public abstract class NaverLoginHelper {
         return this;
     }
 
-    public NaverLoginHelper(Activity mContext, AkgiApplication application) {
+    public NaverLoginHelper(Activity mContext, OAuthLogin OAuthLoginInstance) {
         this.mContext = mContext;
-        this.mApplication =application;
-        this.mOAuthLoginInstance = application.getNaverLoginInstance();
+        this.mOAuthLoginInstance = OAuthLoginInstance;
         init();
     }
 
@@ -42,8 +37,8 @@ public abstract class NaverLoginHelper {
      */
     private void init() {
         OAUTH_CLIENT_NAME = (String)mContext.getText(R.string.app_name);
-        OAUTH_CLIENT_ID = (String)mContext.getText(R.string.naver_client_id);
-        OAUTH_CLIENT_SECRET = (String)mContext.getText(R.string.naver_client_secret);
+        OAUTH_CLIENT_ID = (String)mContext.getText(R.string.naver_login_client_id);
+        OAUTH_CLIENT_SECRET = (String)mContext.getText(R.string.naver_login_client_secret);
 
         mOAuthLoginInstance.showDevelopersLog(true);
         mOAuthLoginInstance.init(mContext, OAUTH_CLIENT_ID, OAUTH_CLIENT_SECRET, OAUTH_CLIENT_NAME);

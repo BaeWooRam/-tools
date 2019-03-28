@@ -1,19 +1,16 @@
-package com.example.akginakwon.util.builder;
+package com.example.bwtools.android.builder.naverapi;
 
 import android.net.Uri;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.akginakwon.R;
+import com.example.bwtools.R;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.nhn.android.naverlogin.OAuthLogin;
 import com.squareup.picasso.Picasso;
 
-import java.net.URI;
 
 public class LoginInfoBuilder {
     private static final String TAG = "GoogleLoginInfoBuilder";

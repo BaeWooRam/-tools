@@ -21,14 +21,18 @@ dependencies {
     //design and support
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'com.android.support:recyclerview-v7:28.0.0'
+    implementation "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
 
     //test
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
 
-    //Google
+    //login
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
+    implementation 'com.naver.nid:naveridlogin-android-sdk:4.2.5'
+
+    implementation "com.squareup.picasso:picasso:$rootProject.picasoVersion"
+    implementation "com.google.code.gson:gson:$rootProject.gsonVersion"
 
 }
