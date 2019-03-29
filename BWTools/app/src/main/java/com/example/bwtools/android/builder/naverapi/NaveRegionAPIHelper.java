@@ -1,6 +1,7 @@
 package com.example.bwtools.android.builder.naverapi;
 
-import com.example.akginakwon.data.model.NaverRegion;
+import android.os.AsyncTask;
+import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -17,6 +18,49 @@ import java.util.ArrayList;
 public class NaveRegionAPIHelper {
     private final static String TAG = "NaverAPIHelper";
     private final static int MAX_DISPLAY = 30;
+    private String mSearchText, mClientID, mClientSecret,mSortAddress,mSortCategory;
+    private int mStartCount=0, mdisplayCount=0;
+    private MvpAdapter mAdapter;
+
+    public NaveRegionAPIHelper setSortAddress(String mSortAddress) {
+        this.mSortAddress = mSortAddress;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setSortCategory(String mSortCategory) {
+        this.mSortCategory = mSortCategory;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setSearchText(String mSearchText) {
+        this.mSearchText = mSearchText;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setClientID(String mClientID) {
+        this.mClientID = mClientID;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setClientSecret(String mClientSecret) {
+        this.mClientSecret = mClientSecret;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setStartCount(int mStartCount) {
+        this.mStartCount = mStartCount;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setDisplayCount(int mSdisplayCount) {
+        this.mdisplayCount = mSdisplayCount;
+        return this;
+    }
+
+    public NaveRegionAPIHelper setAdapter(MvpAdapter mAdapter) {
+        this.mAdapter = mAdapter;
+        return this;
+    }
 
     /**
      * 블로그 데이터 가져오기
@@ -25,6 +69,7 @@ public class NaveRegionAPIHelper {
      *  @param ClientSecret 네이버 API 클라이언트 시크릿 입력
      *  @return 블로그API로 검색한 결과
      */
+
     public String getBolgData(final String searchText, final String ClientID, final String ClientSecret) {
         try {
             String text = URLEncoder.encode(searchText, "UTF-8");
@@ -117,6 +162,7 @@ public class NaveRegionAPIHelper {
             apiURL+="&display=" + MAX_DISPLAY;
             apiURL+="&start=" + startCount;
             apiURL+="&sort=" + "comment";
+            Log.e(TAG,"URL= "+apiURL);
 
             URL url = new URL(apiURL);
             HttpURLConnection con = (HttpURLConnection) url.openConnection();
@@ -149,7 +195,7 @@ public class NaveRegionAPIHelper {
      *  @param total 파싱할 전체 갯수를 받는다
      *  @return 반복문 돌릴 값을 받는다.
      */
-    public int getRepetitionValue(int total){
+    private int getRepetitionValue(int total){
         int quotient = total / 30;
         int remainder = total % 30;
         if(remainder>0)
@@ -163,7 +209,7 @@ public class NaveRegionAPIHelper {
      *  @param result 파싱되기전 결과 값을 받는다
      *  @return 전체 갯수 값이 없으면 0, 있으면 int형 반환
      */
-    public int parserRegionTotal(String result){
+    private int getRegionTotal(String result){
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -183,7 +229,7 @@ public class NaveRegionAPIHelper {
      *  @param result 파싱되기전 결과 값을 받는다
      *  @return 결과 값이 없으면 null, 있으면 NavarRegion 형태로 반환
      */
-    public NaverRegion[] parserRegionDataList(String result){
+    private NaverRegion[] parserRegionDataList(String result){
 
         Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
@@ -202,12 +248,12 @@ public class NaveRegionAPIHelper {
 
     /**
      *  결과 값 분류
-     *  @param list 로그아웃 성공시 이벤트 처리
+     *  @param list 네이버 지역 데이터
      *  @param sortCategory 분류할 카테고리 text 입력
      *  @param sortAddress 분류할 주소 text 입력
      *  @return 들어온 값이 없으면 null, 있으면 ArrayList<NaverRegion> 형태로 반환
      */
-    public ArrayList<NaverRegion> sortRegionData(NaverRegion[] list, String sortCategory, String sortAddress){
+    private ArrayList<NaverRegion> sortRegionData(NaverRegion[] list, String sortCategory, String sortAddress){
         if(list==null)
             return null;
 
@@ -225,5 +271,72 @@ public class NaveRegionAPIHelper {
         }
 
         return temp;
+    }
+
+    /**
+     *  결과 값 분류
+     *  @param list 네이버 지역 데이터
+     *  @return 들어온 값이 없으면 null, 있으면 ArrayList<NaverRegion> 형태로 반환
+     */
+    private ArrayList<NaverRegion> sortAllRegionData(NaverRegion[] list){
+        if(list==null)
+            return null;
+
+        ArrayList<NaverRegion> temp = new ArrayList<>();
+
+        for(NaverRegion i : list){
+            temp.add(i);
+            System.out.println("Title : "+i.getTitle());
+            System.out.println("Description : "+i.getDescription());
+            System.out.println("InternetURL : "+i.getInternetURL());
+            System.out.println("Category : "+i.getCategory()+"\n\n");
+
+        }
+
+        return temp;
+    }
+
+
+    private class applayAllRegionData extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (mSearchText !=null && mClientID != null && mClientSecret != null && mStartCount > 0)
+                new Error(TAG+" Error! Please input SearchText, ClientID, ClientSecret and StartCount");
+            return getRegionData(mSearchText,mClientID,mClientSecret,mStartCount);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            System.out.println(TAG+"result = "+result);
+            mAdapter.addList(sortAllRegionData(parserRegionDataList(result)));
+        }
+    }
+
+    private class applayRegionData extends AsyncTask<Void, Void, String> {
+        @Override
+        protected String doInBackground(Void... voids) {
+            if (mSearchText !=null && mClientID != null && mClientSecret != null && mStartCount > 0)
+                new Error(TAG+" Error! Please input SearchText, ClientID, ClientSecret and StartCount");
+            return getRegionData(mSearchText,mClientID,mClientSecret,mStartCount);
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (mSortCategory !=null && mSortAddress != null)
+                new Error(TAG+" Error! Please input SortAddress, SortCategory");
+            mAdapter.addList(sortRegionData(parserRegionDataList(result),mSortCategory,mSortAddress));
+        }
+    }
+
+
+
+    public void AllRegionData(){
+        applayAllRegionData applayAllRegionData = new applayAllRegionData();
+        applayAllRegionData.execute();
+    }
+
+    public void RegionData(){
+        applayRegionData applayRegionData = new applayRegionData();
+        applayRegionData.execute();
     }
 }
