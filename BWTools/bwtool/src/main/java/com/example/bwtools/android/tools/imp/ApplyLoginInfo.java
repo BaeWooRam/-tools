@@ -1,14 +1,11 @@
 package com.example.bwtools.android.tools.imp;
 
-import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.bwtools.R;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.squareup.picasso.Picasso;
 
 
 public abstract class ApplyLoginInfo {

@@ -4,9 +4,16 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 
 import com.example.bwtools.R;
+import com.example.bwtools.android.tools.base.dto.NaverRegion;
+import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
 import com.example.bwtools.android.tools.interfaces.NaverLocalImp;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -133,7 +140,6 @@ public class FactoryNaverRegion implements NaverLocalImp {
      */
     @Override
     public ArrayList<NaverRegion> parserRegionArray(String result) {
-        Gson gson = new Gson();
         JsonParser jsonParser = new JsonParser();
 
         ArrayList<NaverRegion> naverRegionsList = new ArrayList<>();

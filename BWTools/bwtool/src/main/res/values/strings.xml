@@ -9,4 +9,7 @@
     <!--네이버 로그인-->
     <string name="naver_local_client_id"></string>
     <string name="naver_local_client_secret"></string>
+
+    <!--에러-->
+    <string name="string_error">에러가 발생하였습니다!</string>
 </resources>

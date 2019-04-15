@@ -4,7 +4,18 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.View;
 
+import com.example.bwtools.R;
 import com.example.bwtools.android.tools.interfaces.NaverMaplmp;
+import com.naver.maps.geometry.LatLng;
+import com.naver.maps.map.CameraAnimation;
+import com.naver.maps.map.CameraUpdate;
+import com.naver.maps.map.MapFragment;
+import com.naver.maps.map.NaverMap;
+import com.naver.maps.map.OnMapReadyCallback;
+import com.naver.maps.map.UiSettings;
+import com.naver.maps.map.overlay.Marker;
+import com.naver.maps.map.overlay.Overlay;
+import com.naver.maps.map.overlay.OverlayImage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,16 +46,16 @@ public class FactoryNaverMap implements NaverMaplmp {
         markerMap = new HashMap<>();
     }
 
-    public static void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int FragmentMap) {
-        MapFragment naverMapFragment = findByNaverMap(fragmentManager, FragmentMap);
+    public static void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int FragmentMap, @IdRes int fragmentMapID) {
+        MapFragment naverMapFragment = findByNaverMap(fragmentManager, FragmentMap, fragmentMapID);
         naverMapFragment.getMapAsync(mapReadyCallback);
     }
 
-    private static MapFragment findByNaverMap(FragmentManager fragmentManager, @IdRes int FragmentMap){
+    private static MapFragment findByNaverMap(FragmentManager fragmentManager, @IdRes int FragmentMap, @IdRes int fragmentMapID){
         MapFragment mapFragment = (MapFragment)fragmentManager.findFragmentById(FragmentMap);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
-            fragmentManager.beginTransaction().add(R.id.selectcategory_map, mapFragment).commit();
+            fragmentManager.beginTransaction().add(fragmentMapID, mapFragment).commit();
         }
         return mapFragment;
     }

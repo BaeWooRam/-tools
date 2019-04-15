@@ -1,6 +1,6 @@
 package com.example.bwtools.android.tools.interfaces;
 
-import com.napal.akginakwon.data.model.NaverRegion;
+import com.example.bwtools.android.tools.base.dto.NaverRegion;
 
 import java.util.ArrayList;
 
