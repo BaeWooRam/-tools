@@ -3,7 +3,6 @@ package com.example.bwtools.android.tools.imp;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 
-
 import com.example.bwtools.android.tools.interfaces.AppPermissionIlmp;
 
 import java.util.ArrayList;

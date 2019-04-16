@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.view.View;
 
-import com.example.bwtools.R;
 import com.example.bwtools.android.tools.interfaces.NaverMaplmp;
 import com.naver.maps.geometry.LatLng;
 import com.naver.maps.map.CameraAnimation;

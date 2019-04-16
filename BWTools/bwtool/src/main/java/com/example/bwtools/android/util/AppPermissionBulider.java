@@ -56,7 +56,7 @@ public class AppPermissionBulider {
         public AppPermission(Activity context, String[] requestPermission) {
             if(requestPermission != null && requestPermission.length>0){
                 Log.e("AppPermission", "Start!");
-                checkAndRequestPermission(context,AppPermissionBulider.CHECK_PERMISSION,requestPermission);
+                checkAndRequestPermission(context, AppPermissionBulider.CHECK_PERMISSION,requestPermission);
             }
             else
                 throw new Error("AppPermissionBulider build() Error : Please Input Permission!");
@@ -65,7 +65,7 @@ public class AppPermissionBulider {
         public AppPermission(Fragment context, String[] requestPermission) {
             if(requestPermission != null && requestPermission.length>0){
                 Log.e("AppPermission", "Start!");
-                checkAndRequestPermission(context,AppPermissionBulider.CHECK_PERMISSION,requestPermission);
+                checkAndRequestPermission(context, AppPermissionBulider.CHECK_PERMISSION,requestPermission);
             }
             else
                 throw new Error("AppPermissionBulider build() Error : Please Input Permission!");

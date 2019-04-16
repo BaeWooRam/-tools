@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-
 import com.example.bwtools.android.tools.interfaces.RecyclerTouchImp;
 
 import androidx.annotation.NonNull;

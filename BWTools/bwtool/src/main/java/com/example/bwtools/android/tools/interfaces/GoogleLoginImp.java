@@ -5,7 +5,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 
-import io.reactivex.annotations.NonNull;
+import androidx.annotation.NonNull;
 
 public interface GoogleLoginImp extends GoogleAPIlmp{
     void setupGoogleSignClient();
