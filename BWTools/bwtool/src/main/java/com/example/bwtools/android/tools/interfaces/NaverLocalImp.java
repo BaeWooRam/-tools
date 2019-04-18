@@ -4,13 +4,10 @@ import com.example.bwtools.android.tools.base.dto.NaverRegion;
 
 import java.util.ArrayList;
 
-public interface NaverLocalImp extends NaverAPIlmp{
-    void insertAllRegionDataAfterHandleResult();
-    void insertRegionDataAfterHandleResult();
-    ArrayList<NaverRegion> sortRegionArrayToList(ArrayList<NaverRegion> naverRegionList);
-    ArrayList<NaverRegion> sortAllRegionArrayToList(ArrayList<NaverRegion> naverRegionList);
-    ArrayList<NaverRegion> parserRegionArray(String result);
-    int getRegionTotal(String result);
-    int getRepetitionCount(int total);
+public interface NaverLocalImp extends NaverAPIlmp {
+    void insertRegionData();
+    void AddRegionData();
+    void restartParserRegionArray(ArrayList<NaverRegion> naverRegionsList);
+    ArrayList<NaverRegion> getParserRegionList(String result);
     String getRegionSearchResult();
 }
