@@ -10,7 +10,6 @@ import com.example.bwtools.R;
 import com.example.bwtools.android.tools.base.dto.NaverRegion;
 import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
 import com.example.bwtools.android.tools.interfaces.NaverLocalImp;
-import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -25,19 +24,18 @@ import java.util.ArrayList;
 import androidx.annotation.LayoutRes;
 
 
-//TODO 현재 안드로이드에서 라이브러리로 분리작업
 public class FactoryNaverRegion implements NaverLocalImp {
-    private final String TAG = "NaverAPIHelper";
-    public final int MAX_DISPLAY = 30;
-    private String searchText, ClientID, ClientSecret, sortAddress, sortCategory;
-    private int startCount = 1, displayCount = 0, count =0;
+    private final String TAG = "FactoryNaverRegion";
+    public static final int MAX_REGION_DATA =30;
+    public static final int MAX_DISPLAY =10;
+    private String searchText, ClientID, ClientSecret, sortAddress, sortCategoryAndDescription, requestResult;
+    private int startCount = 1, position = 0, page = 0;
+
     private MvpAdapter Adapter;
     private Activity targetActivity;
     private ProgressDialog progressDialog;
-    private int progressDialogLayout;
     public FactoryNaverRegion(Activity thisActivity,@LayoutRes int progressDialogLayout) {
         this.targetActivity = thisActivity;
-        this.progressDialogLayout = progressDialogLayout;
         this.progressDialog = new ProgressDialog(targetActivity);
     }
 
@@ -59,8 +57,8 @@ public class FactoryNaverRegion implements NaverLocalImp {
         return this;
     }
 
-    public FactoryNaverRegion setupSortCategory(String sortCategory) {
-        this.sortCategory = (sortCategory == null) || sortCategory.equals("") ? "" : sortCategory;
+    public FactoryNaverRegion setupSortCategoryAndDescription(String sortCategory) {
+        this.sortCategoryAndDescription = (sortCategory == null) || sortCategory.equals("") ? "" : sortCategory;
         return this;
     }
 
@@ -75,133 +73,6 @@ public class FactoryNaverRegion implements NaverLocalImp {
         ClientSecret = (String) targetActivity.getText(R.string.naver_local_client_secret);
     }
 
-    @Override
-    public void insertAllRegionDataAfterHandleResult() {
-        applayAllRegionData applayAllRegionData = new applayAllRegionData();
-        applayAllRegionData.execute();
-    }
-
-    @Override
-    public void insertRegionDataAfterHandleResult() {
-        applayRegionData applayRegionData = new applayRegionData();
-        applayRegionData.execute();
-    }
-
-    /**
-     * 결과 값 분류
-     *
-     * @param array 네이버 지역 데이터
-     * @return 들어온 값이 없으면 null, 있으면 ArrayList<NaverRegion> 형태로 반환
-     */
-    @Override
-    public ArrayList<NaverRegion> sortAllRegionArrayToList(ArrayList<NaverRegion> array) {
-        if (isEmptyNaverRegionArray(array))
-            return null;
-
-        ArrayList<NaverRegion> temp = new ArrayList<>();
-
-        for (NaverRegion region : array) {
-            if (region.isContainAddress(sortAddress)) {
-                temp.add(region);
-            }
-        }
-
-        return temp;
-    }
-
-    /**
-     * 결과 값 분류
-     *
-     * @param array 네이버 지역 데이터
-     * @return 들어온 값이 없으면 null, 있으면 ArrayList<NaverRegion> 형태로 반환
-     */
-    @Override
-    public ArrayList<NaverRegion> sortRegionArrayToList(ArrayList<NaverRegion> array) {
-        if (isEmptyNaverRegionArray(array))
-            return null;
-
-        ArrayList<NaverRegion> temp = new ArrayList<>();
-
-        for (NaverRegion region : array) {
-            if (region.isContainAddress(sortAddress) && region.isContainCategoryOrDescription(sortCategory)) {
-                temp.add(region);
-            }
-        }
-
-        return temp;
-    }
-
-
-    /**
-     * 결과값 파싱
-     *
-     * @param result 파싱되기전 결과 값을 받는다
-     * @return 결과 값이 없으면 null, 있으면 NavarRegion 형태로 반환
-     */
-    @Override
-    public ArrayList<NaverRegion> parserRegionArray(String result) {
-        JsonParser jsonParser = new JsonParser();
-
-        ArrayList<NaverRegion> naverRegionsList = new ArrayList<>();
-        try {
-            JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
-            JsonArray jsonArray = jsonObject.getAsJsonArray("items");
-            for (int i = 0; i < jsonArray.size(); i++,count++) {
-                JsonObject jsonNaverRegions = (JsonObject) jsonArray.get(i);
-                NaverRegion naverRegion = new NaverRegion();
-                naverRegion.setNum(count);
-                naverRegion.setAddress(jsonNaverRegions.get("address").getAsString());
-                naverRegion.setCategory(jsonNaverRegions.get("category").getAsString());
-                naverRegion.setDescription(jsonNaverRegions.get("description").getAsString());
-                naverRegion.setTitle(jsonNaverRegions.get("title").getAsString());
-                naverRegion.setTelephone(jsonNaverRegions.get("telephone").getAsString());
-                naverRegion.setInternetURL(jsonNaverRegions.get("link").getAsString());
-                naverRegionsList.add(naverRegion);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return naverRegionsList;
-    }
-
-    /**
-     * 결과값 전체 갯수
-     *
-     * @param result 파싱되기전 결과 값을 받는다
-     * @return 전체 갯수 값이 없으면 0, 있으면 int형 반환
-     */
-    @Override
-    public int getRegionTotal(String result) {
-        Gson gson = new Gson();
-        JsonParser jsonParser = new JsonParser();
-        JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
-        String total;
-        try {
-            total = jsonObject.get("total").getAsString();
-        } catch (Exception e) {
-            total = null;
-        }
-
-        return total != null ? Integer.parseInt(total) : 0;
-    }
-
-    /**
-     * 페이징을 위한 반복 횟수 계산
-     *
-     * @param total 파싱할 전체 갯수를 받는다
-     * @return 반복문 돌릴 값을 받는다.
-     */
-    @Override
-    public int getRepetitionCount(int total) {
-        int RepetitionCount = total / MAX_DISPLAY;
-        int remainder = total % MAX_DISPLAY;
-        if (isRemainder(remainder))
-            RepetitionCount += 1;
-
-        return RepetitionCount;
-    }
-
     /**
      * 지역 정보 가져오기(Display 30개 씩) -> 30개가 최대 사이즈
      *
@@ -212,7 +83,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         try {
             String text = URLEncoder.encode(searchText, "UTF-8");
             String apiURL = "https://openapi.naver.com/v1/search/local.json?query=" + text; // json 결과
-            apiURL += "&display=" + MAX_DISPLAY;
+            apiURL += "&display=" + MAX_REGION_DATA;
             apiURL += "&start=" + startCount;
             apiURL += "&sort=" + "comment";
 
@@ -242,93 +113,220 @@ public class FactoryNaverRegion implements NaverLocalImp {
     }
 
 
-    private class applayAllRegionData extends AsyncTask<Void, Void, ArrayList<NaverRegion> > {
+    @Override
+    public void insertRegionData() {
+        applayinsertRegionData applayAllRegionData = new applayinsertRegionData();
+        applayAllRegionData.execute();
+    }
+
+    @Override
+    public void AddRegionData() {
+        applayAddRegionData applayRegionData = new applayAddRegionData();
+        applayRegionData.execute();
+    }
+
+    private class applayinsertRegionData extends AsyncTask<Void, Void, ArrayList<NaverRegion> > {
+        long startTime;
         @Override
         protected void onPreExecute() {
-            count =0;
             showLoadingDialog();
         }
 
         @Override
         protected ArrayList<NaverRegion>  doInBackground(Void... voids) {
-            String result = getRegionSearchResult();
-            int total = getRegionTotal(result);
-            int repet = getRepetitionCount(total);
-            ArrayList<NaverRegion> naverRegionList = sortAllRegionArrayToList(parserRegionArray(result));
-            for(int i=1; i<=repet-1; i++){
-                startCount=i*MAX_DISPLAY+1;
-                result = getRegionSearchResult();
-                for(NaverRegion naverRegion:sortAllRegionArrayToList(parserRegionArray(result))){
-                    naverRegionList.add(naverRegion);
-                }
+            startTime = System.currentTimeMillis();
 
-            }
+            requestResult = getRegionSearchResult();
+            ArrayList<NaverRegion> parserRegionList = getParserRegionList(requestResult);
+            handleAndGetRegionData(parserRegionList);
 
-            return naverRegionList;
+            return parserRegionList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<NaverRegion> naverRegionList) {
             Adapter.addList(naverRegionList);
             hideLoading();
+
+            System.out.println("걸린시간(밀리초) = "+ (System.currentTimeMillis()-startTime));
         }
     }
 
-    private class applayRegionData extends AsyncTask<Void, Void, ArrayList<NaverRegion>> {
+    private class applayAddRegionData extends AsyncTask<Void, Void, ArrayList<NaverRegion>> {
+        long startTime;
         @Override
         protected void onPreExecute() {
-            count =0;
             showLoadingDialog();
         }
 
         @Override
         protected ArrayList<NaverRegion>  doInBackground(Void... voids) {
-            String result = getRegionSearchResult();
-            int total = getRegionTotal(result);
-            int repet = getRepetitionCount(total);
+            startTime = System.currentTimeMillis();
 
-            ArrayList<NaverRegion> naverRegionList = sortAllRegionArrayToList(parserRegionArray(result));
-            for(int i=1; i<=repet-1; i++){
-                startCount=i*MAX_DISPLAY+1;
-                result = getRegionSearchResult();
-                for(NaverRegion naverRegion:sortAllRegionArrayToList(parserRegionArray(result))){
-                    naverRegionList.add(naverRegion);
-                }
+            ArrayList<NaverRegion> parserRegionList = new ArrayList<>();
+            handleAndGetRegionData(parserRegionList);
 
-            }
-
-            return naverRegionList;
+            return parserRegionList;
         }
 
         @Override
         protected void onPostExecute(ArrayList<NaverRegion>  naverRegionList) {
             Adapter.addList(naverRegionList);
             hideLoading();
+            System.out.println("걸린시간(밀리초) = "+ (System.currentTimeMillis()-startTime));
         }
     }
 
-    private boolean isRemainder(int remainder) {
-        return remainder > 0 ? true : false;
+    private void handleAndGetRegionData(ArrayList<NaverRegion> parserRegionList){
+        int total = getRegionTotal(requestResult);
+        int MaxPage = total / MAX_REGION_DATA;
+        int MaxPostion = (total % MAX_REGION_DATA) -1;
+
+
+        while(!(parserRegionList.size()>=MAX_DISPLAY)){
+            if(page == MaxPage && position == MaxPostion)
+                break;
+            else{
+                if(position>=(MAX_REGION_DATA-1)){
+                    page++;
+                    position = 0;
+                    startCount=page*MAX_REGION_DATA+1;
+                    requestResult = getRegionSearchResult();
+                }
+            }
+            restartParserRegionArray(parserRegionList);
+        }
     }
 
+    public int getRegionTotal(String result) {
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
+        String total;
+        try {
+            total = jsonObject.get("total").getAsString();
+        } catch (Exception e) {
+            total = null;
+        }
 
-    private boolean isEmptyNaverRegionArray(ArrayList<NaverRegion> regions) {
-        return regions == null ? true : false;
+        return total != null ? Integer.parseInt(total) : 0;
     }
 
-    public ProgressDialog showLoadingDialog() {
+    private void restartParserRegionArray(ArrayList<NaverRegion> naverRegionsList) {
+
+        try {
+            JsonArray RegionArray = getRegionJsonArray(requestResult);
+            for (int restart = position+1 ; restart < RegionArray.size(); restart++) {
+                insertRegionListFromMatchingItem(RegionArray, naverRegionsList,restart);
+                if (isMaxSize(naverRegionsList)){
+                    position = restart;
+                    break;
+                }
+                position = restart;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private ArrayList<NaverRegion> getParserRegionList(String result) {
+        ArrayList<NaverRegion> naverRegionsList = new ArrayList<>();
+        try {
+            JsonArray RegionArray = getRegionJsonArray(result);
+            for (position =0 ; position < RegionArray.size(); position++) {
+                insertRegionListFromMatchingItem(RegionArray, naverRegionsList,position);
+                if (isMaxSize(naverRegionsList)){
+                    break;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return naverRegionsList;
+    }
+
+    private JsonArray getRegionJsonArray(String result){
+        JsonParser jsonParser = new JsonParser();
+        JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
+        return jsonObject.getAsJsonArray("items");
+    }
+
+    private void insertRegionListFromMatchingItem(JsonArray item, ArrayList<NaverRegion> naverRegionsList, int position){
+        JsonObject jsonNaverRegions = (JsonObject) item.get(position);
+        String address = jsonNaverRegions.get("address").getAsString();
+        String category = jsonNaverRegions.get("category").getAsString();
+
+        if(isContainCategoryAndAddress(category,address)){
+            naverRegionsList.add(insertNaverRegionInfo(jsonNaverRegions));
+        }
+    }
+    private NaverRegion insertNaverRegionInfo(JsonObject jsonNaverRegions){
+        NaverRegion naverRegion = new NaverRegion();
+        naverRegion.setAddress(jsonNaverRegions.get("address").getAsString());
+        naverRegion.setCategory(jsonNaverRegions.get("category").getAsString());
+        naverRegion.setDescription(jsonNaverRegions.get("description").getAsString());
+        naverRegion.setTitle(jsonNaverRegions.get("title").getAsString());
+        naverRegion.setTelephone(jsonNaverRegions.get("telephone").getAsString());
+        naverRegion.setInternetURL(jsonNaverRegions.get("link").getAsString());
+        return naverRegion;
+    }
+
+    private boolean isMaxSize(ArrayList<NaverRegion> naverRegionsList){
+        if (naverRegionsList.size()>=MAX_DISPLAY){
+            return true;
+        }else
+            return false;
+    }
+
+    private boolean isContainAddress(String targetAddress) {
+        if (targetAddress == null)
+            return true;
+        else{
+            boolean result = targetAddress.contains(sortAddress);
+            return result;
+        }
+    }
+
+    private boolean isContainDescription(String targetDescription) {
+        if (targetDescription == null)
+            return true;
+        else{
+            boolean result = targetDescription.contains(sortCategoryAndDescription);
+            return result;
+        }
+    }
+
+    private boolean isContainCategory(String targetCategory) {
+        if (targetCategory == null)
+            return true;
+        else{
+            boolean result = targetCategory.contains(sortCategoryAndDescription);
+            return result;
+        }
+    }
+
+    private boolean isContainCategoryOrDescription(String sortCategoryAndDescription) {
+        return (isContainDescription(sortCategoryAndDescription) || isContainCategory(sortCategoryAndDescription) ? true : false);
+    }
+
+    private boolean isContainCategoryAndAddress(String targetCategoryAndDescription, String targetAddress) {
+        return (isContainCategoryOrDescription(targetCategoryAndDescription) && isContainAddress(targetAddress) ? true : false);
+    }
+
+    private ProgressDialog showLoadingDialog() {
         progressDialog.show();
         if (progressDialog.getWindow() != null) {
             progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
-        progressDialog.setContentView(progressDialogLayout);
+        progressDialog.setContentView(R.layout.progress_dialog);
         progressDialog.setIndeterminate(true);
         progressDialog.setCancelable(false);
         progressDialog.setCanceledOnTouchOutside(false);
         return progressDialog;
     }
 
-    public void hideLoading() {
+    private void hideLoading() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }

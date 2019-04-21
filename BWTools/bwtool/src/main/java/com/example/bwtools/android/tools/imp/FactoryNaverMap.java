@@ -26,7 +26,6 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
-//TODO 현재 안드로이드에서 라이브러리로 분리작업
 public class FactoryNaverMap implements NaverMaplmp {
     private final String TAG = "FactoryNaverLogin";
     private final int INT_MAX = 2147483647;
