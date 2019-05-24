@@ -1,10 +1,10 @@
-package com.example.bwtools.android.tools.imp;
+package com.example.bwtools.android.view.imp;
 
 import android.app.Activity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import com.example.bwtools.android.tools.interfaces.RecyclerTouchImp;
+import com.example.bwtools.android.view.interfaces.RecyclerTouchImp;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;

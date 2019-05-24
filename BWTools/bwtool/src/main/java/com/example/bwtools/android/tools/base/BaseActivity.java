@@ -11,6 +11,7 @@ import android.widget.Toast;
 
 import com.example.bwtools.R;
 import com.example.bwtools.android.tools.base.mvp.MvpActivity;
+import com.example.bwtools.android.tools.base.mvp.MvpView;
 import com.example.bwtools.android.util.CommonUtils;
 
 import androidx.annotation.LayoutRes;
@@ -21,8 +22,10 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public abstract class BaseActivity extends AppCompatActivity implements MvpActivity {
+public abstract class BaseActivity<Presenter> extends AppCompatActivity implements MvpActivity, MvpView<Presenter> {
     private ProgressDialog mProgressDialog;
+    protected Presenter presenter;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +37,11 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpActiv
     public abstract int setupActivityResource();
 
     public abstract void SetUp();
+
+    @Override
+    public void setupPresenter(Presenter presenter) {
+        this.presenter = presenter;
+    }
 
     @Override
     public void setUpToolbar(int layoutID, String title) {
@@ -63,6 +71,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpActiv
         perent.setContentInsetsAbsolute(0,0);
 
     }
+
     @Override
     public void showLoading() {
         hideLoading();
@@ -74,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements MvpActiv
         if (message != null) {
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(this, getString(R.string.string_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "메시지 내용이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 

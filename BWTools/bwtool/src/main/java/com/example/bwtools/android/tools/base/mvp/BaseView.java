@@ -4,7 +4,7 @@ import android.content.DialogInterface;
 
 import androidx.annotation.StringRes;
 
-public interface BaseView {
+public interface BaseView{
     void showDialog(String message);
     void showDialog(String message, DialogInterface.OnClickListener NegativeClickHandler, DialogInterface.OnClickListener PositiveClickHandler);
     void showMessage(String message);

@@ -76,7 +76,7 @@ public class FactoryAppPermission implements AppPermissionIlmp {
     public void checkAndRequestFragmentPermission() {
         String[] requiredPermissions = getRequiredFragmentPermissions();
 
-        if (isEmptyRequestPermission(requiredPermissions) && targetFragment.isAdded()) {
+        if (isEmptyRequestPermission(requiredPermissions) && targetFragment.isVisible()) {
             targetFragment.requestPermissions(requiredPermissions, CHECK_PERMISSION);
         } else
             new Error(TAG+" Empty requirePermission or Activity is Destroyed");

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.example.bwtools.R;
 import com.example.bwtools.android.tools.base.mvp.BaseView;
+import com.example.bwtools.android.tools.base.mvp.MvpView;
 import com.example.bwtools.android.util.CommonUtils;
 
 import androidx.annotation.LayoutRes;
@@ -21,14 +22,23 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
-public abstract class BaseFragment extends Fragment implements BaseView {
+public abstract class BaseFragment<Presenter> extends Fragment implements BaseView, MvpView<Presenter> {
     private ProgressDialog mProgressDialog;
     private View thisLayout;
     private Activity thisActivity;
+    protected Presenter presenter;
+    public String TAG;
+
+    public View getFragmentLayout(){
+        return thisLayout;
+    }
+
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         thisLayout = inflater.inflate(getLayoutId(), container, false);
         thisActivity = getActivity();
+        TAG = getClass().getSimpleName();
         SetUp();
         return thisLayout;
     }
@@ -36,11 +46,13 @@ public abstract class BaseFragment extends Fragment implements BaseView {
     @LayoutRes
     public abstract int getLayoutId();
 
-    public View getFragmentLayout(){
-        return thisLayout;
+    @Override
+    public void setupPresenter(Presenter presenter) {
+        this.presenter = presenter;
     }
 
     public abstract void SetUp();
+
 
     @Override
     public void showLoading() {
@@ -53,7 +65,7 @@ public abstract class BaseFragment extends Fragment implements BaseView {
         if (message != null) {
             Toast.makeText(thisActivity, message, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(thisActivity, getString(R.string.string_error), Toast.LENGTH_SHORT).show();
+            Toast.makeText(thisActivity, "메시지 내용이 없습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
