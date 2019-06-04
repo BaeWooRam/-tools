@@ -1,10 +1,76 @@
 package com.example.bwtools.android.tools.base.dto;
 
 public class Location {
+<<<<<<< HEAD
     private Point locationPoint;
 
     public Location(Point locationPoint) {
         this.locationPoint = locationPoint;
+=======
+    private String num;
+    private String name;
+    private String address;
+    private String phone;
+    private String image;
+    private String category;
+    private String information;
+    private Point locationPoint;
+
+    public String getNum() {
+        return num;
+    }
+
+    public void setNum(String num) {
+        this.num = num;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+>>>>>>> parent of cd21003... Revert "06-04"
     }
 
     public void setLocationPoint(Point locationPoint) {

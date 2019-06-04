@@ -1,6 +1,10 @@
 package com.example.bwtools.android.tools.base.dto;
 
+<<<<<<< HEAD
 public class NaverRegion extends Region {
+=======
+public class NaverRegion extends Location {
+>>>>>>> parent of cd21003... Revert "06-04"
     private String internetURL;
 
     private String description;

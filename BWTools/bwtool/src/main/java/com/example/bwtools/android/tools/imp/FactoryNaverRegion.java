@@ -31,10 +31,10 @@ public class FactoryNaverRegion implements NaverLocalImp {
     private String searchText, ClientID, ClientSecret, sortAddress, sortCategoryAndDescription, requestResult;
     private int startCount = 1, position = 0, page = 0;
 
-    private MvpAdapter Adapter;
+    private MvpAdapter<NaverRegion> Adapter;
     private Activity targetActivity;
     private ProgressDialog progressDialog;
-    public FactoryNaverRegion(Activity thisActivity,@LayoutRes int progressDialogLayout) {
+    public FactoryNaverRegion(Activity thisActivity, @LayoutRes int progressDialogLayout) {
         this.targetActivity = thisActivity;
         this.progressDialog = new ProgressDialog(targetActivity);
     }
@@ -278,25 +278,29 @@ public class FactoryNaverRegion implements NaverLocalImp {
         naverRegion.setAddress(jsonNaverRegions.get("address").getAsString());
         naverRegion.setCategory(jsonNaverRegions.get("category").getAsString());
         naverRegion.setDescription(jsonNaverRegions.get("description").getAsString());
-        naverRegion.setTitle(jsonNaverRegions.get("title").getAsString());
-        naverRegion.setTelephone(jsonNaverRegions.get("telephone").getAsString());
+        naverRegion.setName(jsonNaverRegions.get("title").getAsString());
+        naverRegion.setPhone(jsonNaverRegions.get("telephone").getAsString());
         naverRegion.setInternetURL(jsonNaverRegions.get("link").getAsString());
         return naverRegion;
     }
 
     public boolean isMaxSize(ArrayList<NaverRegion> naverRegionsList){
+<<<<<<< HEAD
         if (naverRegionsList.size()>=MAX_DISPLAY){
             return true;
         }else
             return false;
+=======
+
+        return naverRegionsList.size()>=MAX_DISPLAY? true : false;
+>>>>>>> parent of cd21003... Revert "06-04"
     }
 
     public boolean isContainAddress(String targetAddress) {
         if (targetAddress == null)
             return true;
         else{
-            boolean result = targetAddress.contains(sortAddress);
-            return result;
+            return targetAddress.contains(sortAddress);
         }
     }
 
@@ -304,8 +308,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         if (targetDescription == null)
             return true;
         else{
-            boolean result = targetDescription.contains(sortCategoryAndDescription);
-            return result;
+            return targetDescription.contains(sortCategoryAndDescription);
         }
     }
 
@@ -313,8 +316,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         if (targetCategory == null)
             return true;
         else{
-            boolean result = targetCategory.contains(sortCategoryAndDescription);
-            return result;
+            return targetCategory.contains(sortCategoryAndDescription);
         }
     }
 

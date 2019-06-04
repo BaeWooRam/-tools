@@ -39,7 +39,11 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         thisLayout = inflater.inflate(getLayoutId(), container, false);
         thisActivity = getActivity();
         TAG = getClass().getSimpleName();
+<<<<<<< HEAD
         SetUp();
+=======
+        SetUp(savedInstanceState);
+>>>>>>> parent of cd21003... Revert "06-04"
         return thisLayout;
     }
 
@@ -51,7 +55,8 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         this.presenter = presenter;
     }
 
-    public abstract void SetUp();
+    public abstract void SetUp(Bundle savedInstanceState);
+
 
 
     @Override
