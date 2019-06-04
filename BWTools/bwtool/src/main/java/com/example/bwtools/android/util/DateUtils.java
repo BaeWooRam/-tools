@@ -17,10 +17,7 @@ package com.example.bwtools.android.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-<<<<<<< HEAD
-=======
 import java.util.Locale;
->>>>>>> parent of cd21003... Revert "06-04"
 
 /**
  * Created by janisharali on 27/01/17.
@@ -31,11 +28,7 @@ public final class DateUtils {
     private static final String TAG = "DateUtils";
 
     public static String getTransfromTimeStamp(String timestamp) {
-<<<<<<< HEAD
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
-=======
         SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
->>>>>>> parent of cd21003... Revert "06-04"
 
         String date = null;
         try {

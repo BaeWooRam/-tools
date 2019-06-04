@@ -1,12 +1,6 @@
 package com.example.bwtools.android.tools.base.dto;
 
 public class Location {
-<<<<<<< HEAD
-    private Point locationPoint;
-
-    public Location(Point locationPoint) {
-        this.locationPoint = locationPoint;
-=======
     private String num;
     private String name;
     private String address;
@@ -70,7 +64,6 @@ public class Location {
 
     public void setInformation(String information) {
         this.information = information;
->>>>>>> parent of cd21003... Revert "06-04"
     }
 
     public void setLocationPoint(Point locationPoint) {

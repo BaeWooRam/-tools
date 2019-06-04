@@ -2,14 +2,12 @@ package com.example.bwtools.android.view.infinitePagerAdatper;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.MemoryCategory;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.bwtools.android.tools.base.dto.EventAndAd;
 
@@ -26,7 +24,7 @@ public class EventAndADImageFragment extends Fragment {
     public static EventAndADImageFragment newInstance(EventAndAd targetEvent, int targetLayoutID, int targetImageViewID) {
         EventAndADImageFragment fragment = new EventAndADImageFragment();
 
-        fragment.targetURI = targetEvent.getImageThumbnail();
+        fragment.targetURI = targetEvent.getImage();
         fragment.targetLayoutID = targetLayoutID;
         fragment.targetImageViewID = targetImageViewID;
         return fragment;

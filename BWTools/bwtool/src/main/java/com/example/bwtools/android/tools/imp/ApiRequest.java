@@ -16,13 +16,6 @@ public class ApiRequest {
     private String requestMethod;
     private String BaseURL;
     private String responseResult;
-<<<<<<< HEAD
-    private final ArrayList<RequestQuery> requestQueryList = new ArrayList();
-    private final ArrayList<RequestBody> requestBodyList = new ArrayList();
-    private final ArrayList<RequestHead> requestHeaderList = new ArrayList();
-    private boolean doAutoClear=true;
-
-=======
     private ArrayList<RequestQuery> requestQueryList;
     private ArrayList<RequestBody> requestBodyList;
     private ArrayList<RequestHead> requestHeaderList;
@@ -33,7 +26,6 @@ public class ApiRequest {
         requestBodyList = new ArrayList();
         requestHeaderList = new ArrayList();
     }
->>>>>>> parent of cd21003... Revert "06-04"
 
     public void setupRequestInfo(String BaseURL, String requestMethod){
         this.BaseURL = BaseURL;
@@ -95,10 +87,10 @@ public class ApiRequest {
             }
 
             br.close();
+            System.out.println("response = "+response.toString());
             setResponseResult(response.toString());
         } catch (Exception e) {
-            e.printStackTrace();
-            new Error(e.toString());
+            System.out.println("startRequest Error! "+e.toString());
         }
 
         if(doAutoClear){

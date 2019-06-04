@@ -1,12 +1,5 @@
 package com.example.bwtools.android.tools.imp;
 
-<<<<<<< HEAD
-import com.example.bwtools.android.tools.base.dto.KaKaORegion;
-import com.example.bwtools.android.tools.base.dto.Location;
-import com.example.bwtools.android.tools.base.dto.Rect;
-import com.example.bwtools.android.tools.base.dto.RequestHead;
-import com.example.bwtools.android.tools.base.dto.RequestQuery;
-=======
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
@@ -17,7 +10,6 @@ import com.example.bwtools.android.tools.base.dto.Rect;
 import com.example.bwtools.android.tools.base.dto.RequestHead;
 import com.example.bwtools.android.tools.base.dto.RequestQuery;
 import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
->>>>>>> parent of cd21003... Revert "06-04"
 import com.example.bwtools.android.tools.interfaces.KaKaOLocalImp;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,11 +18,8 @@ import com.google.gson.JsonParser;
 import java.util.ArrayList;
 
 public class FactoryKaKaORegion implements KaKaOLocalImp {
-<<<<<<< HEAD
-=======
     private final String BASE_URL =" https://dapi.kakao.com/v2/local/search/keyword.json";
 
->>>>>>> parent of cd21003... Revert "06-04"
     private final String REGION_SEARCH_QUERY="query";
     private final String REGION_SEARCH_CATEGORY_CODE="category_group_code";
     private final String REGION_SEARCH_LONGITUDE="x";
@@ -53,22 +42,6 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
     public final String SORT_ACCURACY="accuracy";
 
     private ApiRequest apiRequest;
-<<<<<<< HEAD
-    private ArrayList<KaKaORegion> kakaORegionsList;
-
-    public int sdfa;
-    public int asdfas;
-
-    public FactoryKaKaORegion(String baseURL, String requestMethod) {
-        this.apiRequest = new ApiRequest();
-        this.apiRequest.setupRequestInfo(baseURL, requestMethod);
-    }
-
-
-    @Override
-    public void setupBaseURLAndRequestMethod(String baseURL, String requestMethod) {
-        apiRequest.setupRequestInfo(baseURL,requestMethod);
-=======
     private ProgressDialog progressDialog;
     private MvpAdapter<KaKaORegion> mvpAdapter;
 
@@ -88,7 +61,6 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
     @Override
     public void setupBaseURLAndRequestMethod() {
         apiRequest.setupRequestInfo(BASE_URL, ApiRequest.HttpCONNECTTION_GET);
->>>>>>> parent of cd21003... Revert "06-04"
     }
 
     @Override
@@ -158,26 +130,6 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
         apiRequest.startRequest();
     }
 
-<<<<<<< HEAD
-    public String getResponse(){
-        return apiRequest.getResponseResult();
-    }
-
-    @Override
-    public void HandleResponseAfterRequest() {
-        kakaORegionsList = getParserRegionList();
-    }
-
-
-    public ArrayList<KaKaORegion> getParserRegionList() {
-        ArrayList<KaKaORegion> naverRegionsList = new ArrayList<>();
-        try {
-
-            JsonArray regionArray = getRegionJsonArray(getResponse());
-            for (int position =0 ; position < regionArray.size(); position++) {
-                JsonObject regionObject = (JsonObject) regionArray.get(position);
-                naverRegionsList.add(insertNaverRegionInfo(regionObject));
-=======
     @Override
     public ArrayList<KaKaORegion> getKaKaORegionList() {
         return getParserRegionList();
@@ -196,17 +148,12 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
             for (int position =0 ; position < regionArray.size(); position++) {
                 JsonObject regionObject = (JsonObject) regionArray.get(position);
                 kakaoRegionArrayList.add(insertKaKaORegionInfo(regionObject));
->>>>>>> parent of cd21003... Revert "06-04"
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-<<<<<<< HEAD
-        return naverRegionsList;
-=======
         return kakaoRegionArrayList;
->>>>>>> parent of cd21003... Revert "06-04"
     }
 
     public JsonArray getRegionJsonArray(String result){
@@ -215,17 +162,6 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
         return jsonObject.getAsJsonArray("documents");
     }
 
-<<<<<<< HEAD
-    public KaKaORegion insertNaverRegionInfo(JsonObject jsonNaverRegions){
-        KaKaORegion kaKaORegion = new KaKaORegion();
-        kaKaORegion.setAddress(jsonNaverRegions.get("address").getAsString());
-        kaKaORegion.setCategory(jsonNaverRegions.get("category").getAsString());
-        kaKaORegion.setTitle(jsonNaverRegions.get("title").getAsString());
-        kaKaORegion.setTelephone(jsonNaverRegions.get("telephone").getAsString());
-        kaKaORegion.setInternetURL(jsonNaverRegions.get("link").getAsString());
-        return kaKaORegion;
-    }
-=======
     public KaKaORegion insertKaKaORegionInfo(JsonObject jsonNaverRegions){
         KaKaORegion kaKaORegion = new KaKaORegion();
         kaKaORegion.setAddress(jsonNaverRegions.get("address_name").getAsString());
@@ -261,5 +197,4 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
         }
     }
 
->>>>>>> parent of cd21003... Revert "06-04"
 }

@@ -34,7 +34,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
     private MvpAdapter<NaverRegion> Adapter;
     private Activity targetActivity;
     private ProgressDialog progressDialog;
-    public FactoryNaverRegion(Activity thisActivity, @LayoutRes int progressDialogLayout) {
+    public FactoryNaverRegion(Activity thisActivity,@LayoutRes int progressDialogLayout) {
         this.targetActivity = thisActivity;
         this.progressDialog = new ProgressDialog(targetActivity);
     }
@@ -285,15 +285,8 @@ public class FactoryNaverRegion implements NaverLocalImp {
     }
 
     public boolean isMaxSize(ArrayList<NaverRegion> naverRegionsList){
-<<<<<<< HEAD
-        if (naverRegionsList.size()>=MAX_DISPLAY){
-            return true;
-        }else
-            return false;
-=======
 
         return naverRegionsList.size()>=MAX_DISPLAY? true : false;
->>>>>>> parent of cd21003... Revert "06-04"
     }
 
     public boolean isContainAddress(String targetAddress) {

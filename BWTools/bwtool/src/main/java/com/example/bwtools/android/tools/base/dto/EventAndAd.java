@@ -6,8 +6,8 @@ public class EventAndAd {
     @SerializedName("event_num")
     private int num;
 
-    @SerializedName("event_thumbnail")
-    private String imageThumbnail;
+    @SerializedName("event_image")
+    private String image;
 
     public int getNum() {
         return num;
@@ -17,11 +17,11 @@ public class EventAndAd {
         this.num = num;
     }
 
-    public String getImageThumbnail() {
-        return imageThumbnail;
+    public String getImage() {
+        return image;
     }
 
-    public void setImageThumbnail(String image) {
-        this.imageThumbnail = image;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

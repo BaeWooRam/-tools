@@ -8,8 +8,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
-
 import java.util.Timer;
 import java.util.TimerTask;
 
