@@ -76,7 +76,7 @@ public class FactoryAppPermission implements AppPermissionIlmp {
     public void checkAndRequestFragmentPermission() {
         String[] requiredPermissions = getRequiredFragmentPermissions();
 
-        if (isEmptyRequestPermission(requiredPermissions) && targetFragment.isVisible()) {
+        if (isEmptyRequestPermission(requiredPermissions) && targetFragment.isAdded()) {
             targetFragment.requestPermissions(requiredPermissions, CHECK_PERMISSION);
         } else
             new Error(TAG+" Empty requirePermission or Activity is Destroyed");
@@ -108,15 +108,24 @@ public class FactoryAppPermission implements AppPermissionIlmp {
     }
 
     private boolean isEmptyRequestPermission(String[] RequestPermission){
-        return RequestPermission != null && RequestPermission.length>0 ? true : false;
+        if(RequestPermission != null && RequestPermission.length>0)
+            return true;
+        else
+            return false;
     }
 
     public boolean isRequestCode(int requestCode) {
-        return requestCode == CHECK_PERMISSION ? true : false;
+        if (requestCode == CHECK_PERMISSION)
+            return true;
+        else
+            return false;
     }
 
     public boolean isGrantResults(int[] grantResults) {
-        return grantResults.length > 0 ? true : false;
+        if (grantResults.length > 0)
+            return true;
+        else
+            return false;
     }
 
     public int getGrantResultsCount(int[] grantResults) {

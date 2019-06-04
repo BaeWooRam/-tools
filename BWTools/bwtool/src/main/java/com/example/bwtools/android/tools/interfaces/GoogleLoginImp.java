@@ -7,7 +7,7 @@ import com.google.android.gms.tasks.Task;
 
 import androidx.annotation.NonNull;
 
-public interface GoogleLoginImp extends GoogleAPIlmp{
+public interface GoogleLoginImp extends GoogleAPIlmp {
     void setupGoogleSignClient();
     void setupServerOptions();
     void getIDToken();

@@ -1,7 +1,6 @@
 package com.example.bwtools.common;
 
 import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 public class HashUtils {
@@ -11,7 +10,7 @@ public class HashUtils {
 	        try {
 	            MessageDigest digest = MessageDigest.getInstance("SHA-512");
 	            digest.reset();
-	            digest.update(input.getBytes(StandardCharsets.UTF_8));
+	            digest.update(input.getBytes("utf8"));
 	            toReturn = String.format("%040x", new BigInteger(1, digest.digest()));
 	        } catch (Exception e) {
 	            e.printStackTrace();
@@ -26,7 +25,7 @@ public class HashUtils {
 			try {
 			    MessageDigest digest = MessageDigest.getInstance("SHA-256");
 			    digest.reset();
-			    digest.update(input.getBytes(StandardCharsets.UTF_8));
+			    digest.update(input.getBytes("utf8"));
 			    toReturn = String.format("%040x", new BigInteger(1, digest.digest()));
 			} catch (Exception e) {
 			    e.printStackTrace();
