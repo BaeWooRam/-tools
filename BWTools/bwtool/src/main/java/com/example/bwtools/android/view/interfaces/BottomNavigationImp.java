@@ -1,4 +1,4 @@
-package com.example.bwtools.android.tools.interfaces;
+package com.example.bwtools.android.view.interfaces;
 
 import android.view.MenuItem;
 

@@ -1,9 +1,9 @@
-package com.example.bwtools.android.tools.imp;
+package com.example.bwtools.android.view.imp;
 
 import android.app.Activity;
 import android.view.MenuItem;
 
-import com.example.bwtools.android.tools.interfaces.BottomNavigationImp;
+import com.example.bwtools.android.view.interfaces.BottomNavigationImp;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;

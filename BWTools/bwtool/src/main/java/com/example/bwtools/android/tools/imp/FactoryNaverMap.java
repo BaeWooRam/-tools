@@ -26,6 +26,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 
+
 public class FactoryNaverMap implements NaverMaplmp {
     private final String TAG = "FactoryNaverLogin";
     private final int INT_MAX = 2147483647;
@@ -44,13 +45,13 @@ public class FactoryNaverMap implements NaverMaplmp {
         markerMap = new HashMap<>();
     }
 
-    public static void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int FragmentMap, @IdRes int fragmentMapID) {
-        MapFragment naverMapFragment = findByNaverMap(fragmentManager, FragmentMap, fragmentMapID);
+    public static void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int fragmentMapID) {
+        MapFragment naverMapFragment = findByNaverMap(fragmentManager, fragmentMapID);
         naverMapFragment.getMapAsync(mapReadyCallback);
     }
 
-    private static MapFragment findByNaverMap(FragmentManager fragmentManager, @IdRes int FragmentMap, @IdRes int fragmentMapID){
-        MapFragment mapFragment = (MapFragment)fragmentManager.findFragmentById(FragmentMap);
+    private static MapFragment findByNaverMap(FragmentManager fragmentManager, @IdRes int fragmentMapID){
+        MapFragment mapFragment = (MapFragment)fragmentManager.findFragmentById(fragmentMapID);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             fragmentManager.beginTransaction().add(fragmentMapID, mapFragment).commit();
@@ -254,7 +255,7 @@ public class FactoryNaverMap implements NaverMaplmp {
         }
     }
 
-    public Marker creteNaverMapMarker(@NonNull Object makerTag, @NonNull String makerContents, @NonNull LatLng makerPostion){
+    public Marker createNaverMapMarker(@NonNull Object makerTag, @NonNull String makerContents, @NonNull LatLng makerPostion){
         Marker newMarker = new Marker();
         newMarker.setPosition(makerPostion);
         newMarker.setTag(makerTag);
@@ -263,7 +264,7 @@ public class FactoryNaverMap implements NaverMaplmp {
         return newMarker;
     }
 
-    public Marker creteNaverMapMarker(@NonNull String makerContents, @NonNull LatLng makerPostion){
+    public Marker createNaverMapMarker(@NonNull String makerContents, @NonNull LatLng makerPostion){
         Marker newMarker = new Marker();
         newMarker.setPosition(makerPostion);
         newMarker.setTag(MarkerID);
@@ -278,5 +279,9 @@ public class FactoryNaverMap implements NaverMaplmp {
             new Error("Don't create NaverMapMaker");
         else
             MarkerID++;
+    }
+
+    public boolean isCreateMarker(){
+        return !markerMap.isEmpty();
     }
 }
