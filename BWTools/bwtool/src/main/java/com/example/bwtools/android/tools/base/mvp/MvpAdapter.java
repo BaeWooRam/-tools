@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 
-public interface MvpAdapter<Set,Add> {
-    ArrayList<Set> getList();
-
-    void setList(@NonNull ArrayList<Set> list);
-    void addList(@NonNull ArrayList<Add> list);
+public interface MvpAdapter<Type> {
+    ArrayList<Type> getList();
+    void removeList();
+    void setList(@NonNull ArrayList<Type> list);
+    void addList(@NonNull ArrayList<Type> list);
 }
