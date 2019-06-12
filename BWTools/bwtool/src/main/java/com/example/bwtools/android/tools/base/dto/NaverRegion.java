@@ -1,6 +1,6 @@
 package com.example.bwtools.android.tools.base.dto;
 
-public class NaverRegion extends Region {
+public class NaverRegion extends Location {
     private String internetURL;
 
     private String description;

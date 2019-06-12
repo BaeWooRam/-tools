@@ -88,7 +88,7 @@ public class FactoryNaverMap implements NaverMaplmp {
     }
 
     public void removeAllMarker(){
-        List<Marker> list = new ArrayList(markerMap.values());
+        List<Marker> list = new ArrayList<>(markerMap.values());
 
         for(Marker targetMarker:list){
             targetMarker.setMap(null);

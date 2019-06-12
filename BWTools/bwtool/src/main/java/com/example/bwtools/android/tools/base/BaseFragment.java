@@ -39,7 +39,7 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         thisLayout = inflater.inflate(getLayoutId(), container, false);
         thisActivity = getActivity();
         TAG = getClass().getSimpleName();
-        SetUp();
+        SetUp(savedInstanceState);
         return thisLayout;
     }
 
@@ -51,7 +51,7 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         this.presenter = presenter;
     }
 
-    public abstract void SetUp();
+    public abstract void SetUp(Bundle savedInstanceState);
 
 
     @Override

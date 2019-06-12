@@ -1,6 +1,6 @@
 package com.example.bwtools.android.tools.base.dto;
 
-public class KaKaORegion extends Region {
+public class KaKaORegion extends Location {
     private String internetURL;
 
     public String getInternetURL() {
