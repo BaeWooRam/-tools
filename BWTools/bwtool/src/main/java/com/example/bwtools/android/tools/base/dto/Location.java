@@ -1,6 +1,8 @@
 package com.example.bwtools.android.tools.base.dto;
 
-public class Location {
+import java.io.Serializable;
+
+public class Location implements Serializable {
     private String num;
     private String name;
     private String address;
@@ -74,7 +76,16 @@ public class Location {
         return String.valueOf(locationPoint.getLongitude());
     }
 
+    public double getLongitude(){
+        return locationPoint.getLongitude();
+    }
+
     public String getLocationLatitude(){
         return String.valueOf(locationPoint.getLatitude());
     }
+
+    public double getLatitude(){
+        return locationPoint.getLatitude();
+    }
+
 }

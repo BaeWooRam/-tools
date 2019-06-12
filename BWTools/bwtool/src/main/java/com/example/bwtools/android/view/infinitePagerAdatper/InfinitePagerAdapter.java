@@ -3,38 +3,27 @@ package com.example.bwtools.android.view.infinitePagerAdatper;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.example.bwtools.android.tools.base.dto.EventAndAd;
 import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
 
 import java.util.ArrayList;
 
-import androidx.annotation.IdRes;
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 
 
-public abstract class InfinitePagerAdapter extends FragmentStatePagerAdapter implements MvpAdapter<EventAndAd>
+public abstract class InfinitePagerAdapter<Type> extends FragmentStatePagerAdapter implements MvpAdapter<Type>
     {
         private final String TAG = "InfinitePagerAdapter";
         private final boolean DEBUG = true;
-
         public int LOOPS_COUNT = 400;
+        protected ArrayList<Type> DataList;
 
-        private ArrayList<EventAndAd> EventList;
-
-        @LayoutRes
-        abstract public int setupItemLayoutID();
-
-        @IdRes
-        abstract public int setupItemImageID();
-
-        public InfinitePagerAdapter(FragmentManager manager, ArrayList<EventAndAd> EventList)
+        public InfinitePagerAdapter(FragmentManager manager,ArrayList<Type> DataList)
         {
             super(manager);
-            this.EventList = EventList;
+            this.DataList = DataList;
         }
 
         @NonNull
@@ -51,13 +40,13 @@ public abstract class InfinitePagerAdapter extends FragmentStatePagerAdapter imp
         @Override
         public Fragment getItem(int position)
         {
-            if (EventList != null && EventList.size() > 0)
+            if (DataList != null && DataList.size() > 0)
             {
                 debug("getItem: real position: " + position);
                 position = getVirtualPosition(position); // use modulo for infinite cycling
                 debug("getItem: virtual position: " + position);
 
-                return EventAndADImageFragment.newInstance(EventList.get(position),setupItemLayoutID(),setupItemImageID());
+                return setItemFragment(DataList, position);
 
             }
             else
@@ -67,13 +56,14 @@ public abstract class InfinitePagerAdapter extends FragmentStatePagerAdapter imp
             }
         }
 
+        abstract public Fragment setItemFragment(final ArrayList<Type> DataList, final int position);
 
         @Override
         public int getCount()
         {
-            if (EventList != null && EventList.size() > 0)
+            if (DataList != null && DataList.size() > 0)
             {
-                return EventList.size()*LOOPS_COUNT; // simulate infinite by big number of products
+                return DataList.size()*LOOPS_COUNT; // simulate infinite by big number of products
             }
             else
             {
@@ -82,36 +72,37 @@ public abstract class InfinitePagerAdapter extends FragmentStatePagerAdapter imp
         }
 
         public int getVirtualPosition(int position){
-            return position % EventList.size();
+            int count = DataList.size();
+            return count <= 0 ? 1:position % DataList.size();
         }
 
         @Override
-        public ArrayList<EventAndAd> getList() {
-            return EventList;
+        public ArrayList<Type> getList() {
+            return DataList;
         }
 
         @Override
-        public void setList(@NonNull ArrayList<EventAndAd> list) {
-            this.EventList = list;
+        public void setList(@NonNull ArrayList<Type> list) {
+            this.DataList = list;
             notifyDataSetChanged();
         }
 
         @Override
-        public void addList(@NonNull ArrayList<EventAndAd> list) {
-            for(EventAndAd event : list)
-                this.EventList.add(event);
+        public void addList(@NonNull ArrayList<Type> list) {
+            for(Type type : list)
+                this.DataList.add(type);
 
             notifyDataSetChanged();
         }
 
         @Override
         public void removeList() {
-            this.EventList.clear();
+            this.DataList.clear();
             notifyDataSetChanged();
         }
 
         public int getLoopsStartPostion(){
-            return EventList.size()*(LOOPS_COUNT/2);
+            return DataList.size()*(LOOPS_COUNT/2);
         }
 
         private void debug(String message) {
