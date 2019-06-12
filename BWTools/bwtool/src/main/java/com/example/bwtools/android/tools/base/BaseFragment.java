@@ -1,6 +1,5 @@
 package com.example.bwtools.android.tools.base;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -12,7 +11,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.bwtools.R;
-import com.example.bwtools.android.tools.base.mvp.BaseView;
+import com.example.bwtools.android.tools.base.mvp.MvpFragment;
 import com.example.bwtools.android.tools.base.mvp.MvpView;
 import com.example.bwtools.android.util.CommonUtils;
 
@@ -20,12 +19,13 @@ import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
-public abstract class BaseFragment<Presenter> extends Fragment implements BaseView, MvpView<Presenter> {
+public abstract class BaseFragment<Presenter> extends Fragment implements MvpFragment, MvpView<Presenter> {
     private ProgressDialog mProgressDialog;
     private View thisLayout;
-    private Activity thisActivity;
+    private BaseActivity thisActivity;
     protected Presenter presenter;
     public String TAG;
 
@@ -33,15 +33,15 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         return thisLayout;
     }
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         thisLayout = inflater.inflate(getLayoutId(), container, false);
-        thisActivity = getActivity();
+        thisActivity = (BaseActivity) getActivity();
         TAG = getClass().getSimpleName();
-        SetUp();
+        SetUp(container,savedInstanceState);
         return thisLayout;
     }
+
 
     @LayoutRes
     public abstract int getLayoutId();
@@ -51,7 +51,7 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
         this.presenter = presenter;
     }
 
-    public abstract void SetUp();
+    public abstract void SetUp(ViewGroup container, Bundle savedInstanceState);
 
 
     @Override
@@ -106,6 +106,26 @@ public abstract class BaseFragment<Presenter> extends Fragment implements BaseVi
                     thisActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+    }
+
+    @Override
+    public void setUpActivtiyToolbar(View view) {
+        thisActivity.setUpCustomToolbar(view);
+    }
+
+    @Override
+    public void setUpActivtiyToolbar(int layoutID) {
+        thisActivity.setUpCustomToolbar(layoutID);
+    }
+
+    @Override
+    public void setUpFragmentToolbar(View view, Toolbar targetToolbar) {
+        thisActivity.setUpCustomToolbar(view, targetToolbar);
+    }
+
+    @Override
+    public void setUpFragmentToolbar(int layoutID, Toolbar targetToolbar) {
+        thisActivity.setUpCustomToolbar(layoutID, targetToolbar);
     }
 
 }

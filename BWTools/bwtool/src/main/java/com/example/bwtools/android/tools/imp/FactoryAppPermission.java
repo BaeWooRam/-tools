@@ -108,24 +108,15 @@ public class FactoryAppPermission implements AppPermissionIlmp {
     }
 
     private boolean isEmptyRequestPermission(String[] RequestPermission){
-        if(RequestPermission != null && RequestPermission.length>0)
-            return true;
-        else
-            return false;
+        return RequestPermission != null && RequestPermission.length>0 ? true : false;
     }
 
     public boolean isRequestCode(int requestCode) {
-        if (requestCode == CHECK_PERMISSION)
-            return true;
-        else
-            return false;
+        return requestCode == CHECK_PERMISSION ? true : false;
     }
 
     public boolean isGrantResults(int[] grantResults) {
-        if (grantResults.length > 0)
-            return true;
-        else
-            return false;
+        return grantResults.length > 0 ? true : false;
     }
 
     public int getGrantResultsCount(int[] grantResults) {

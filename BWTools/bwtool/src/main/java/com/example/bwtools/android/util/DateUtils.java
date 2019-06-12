@@ -17,6 +17,7 @@ package com.example.bwtools.android.util;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by janisharali on 27/01/17.
@@ -27,7 +28,7 @@ public final class DateUtils {
     private static final String TAG = "DateUtils";
 
     public static String getTransfromTimeStamp(String timestamp) {
-        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat transFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.KOREAN);
 
         String date = null;
         try {

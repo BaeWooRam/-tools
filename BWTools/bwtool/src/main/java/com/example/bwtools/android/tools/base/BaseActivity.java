@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bwtools.R;
@@ -25,11 +24,13 @@ import androidx.appcompat.widget.Toolbar;
 public abstract class BaseActivity<Presenter> extends AppCompatActivity implements MvpActivity, MvpView<Presenter> {
     private ProgressDialog mProgressDialog;
     protected Presenter presenter;
+    public String TAG;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(setupActivityResource());
+        TAG = getClass().getSimpleName();
         SetUp();
     }
 
@@ -44,32 +45,36 @@ public abstract class BaseActivity<Presenter> extends AppCompatActivity implemen
     }
 
     @Override
-    public void setUpToolbar(int layoutID, String title) {
+    public void setUpCustomToolbar(View CustomView) {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowCustomEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        View CustomView = View.inflate(getApplicationContext(),layoutID,null);
+
         actionBar.setCustomView(CustomView,new ActionBar.LayoutParams(
                 ActionBar.LayoutParams.MATCH_PARENT,ActionBar.LayoutParams.MATCH_PARENT
         ));
-        ((TextView)CustomView.findViewById(R.id.title)).setText(title);
+
+        actionBar.setTitle("");
         Toolbar perent = (Toolbar) CustomView.getParent();
         perent.setContentInsetsAbsolute(0,0);
     }
 
     @Override
-    public void setUpToolbar(View view) {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowCustomEnabled(true);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+    public void setUpCustomToolbar(View CustomView, Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        setUpCustomToolbar(CustomView);
+    }
 
-        actionBar.setCustomView(view,new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.MATCH_PARENT,ActionBar.LayoutParams.MATCH_PARENT
-        ));
+    public void setUpCustomToolbar(int layoutID, Toolbar toolbar) {
+        View CustomView = View.inflate(getApplicationContext(),layoutID,null);
+        setSupportActionBar(toolbar);
+        setUpCustomToolbar(CustomView);
+    }
 
-        Toolbar perent = (Toolbar) view.getParent();
-        perent.setContentInsetsAbsolute(0,0);
-
+    @Override
+    public void setUpCustomToolbar(int layoutID) {
+        View CustomView = View.inflate(getApplicationContext(),layoutID,null);
+        setUpCustomToolbar(CustomView);
     }
 
     @Override
@@ -125,6 +130,5 @@ public abstract class BaseActivity<Presenter> extends AppCompatActivity implemen
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
 
 }
