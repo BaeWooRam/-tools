@@ -1,8 +1,6 @@
 package com.example.bwtools.android.tools.base.dto;
 
-import java.io.Serializable;
-
-public class KaKaORegion extends Location implements Serializable {
+public class KaKaORegion extends Region {
     private String internetURL;
 
     public String getInternetURL() {
@@ -12,4 +10,5 @@ public class KaKaORegion extends Location implements Serializable {
     public void setInternetURL(String internetURL) {
         this.internetURL = internetURL;
     }
+
 }

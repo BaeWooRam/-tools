@@ -22,7 +22,6 @@ public class FragmentUtils {
 
     public static void StackContainerReplaceFragment(Fragment replaceFragment, FragmentManager fragmentManager, @IdRes int containerID) {
         try {
-            Log.e("TAG","count = "+fragmentManager.getBackStackEntryCount());
             FragmentTransaction transaction = fragmentManager.beginTransaction().replace(containerID, replaceFragment).addToBackStack(null);
             transaction.commit();
         }catch (Exception e){

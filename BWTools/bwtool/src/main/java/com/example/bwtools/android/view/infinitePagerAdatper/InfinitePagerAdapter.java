@@ -1,113 +1,141 @@
 package com.example.bwtools.android.view.infinitePagerAdatper;
 
+import android.database.DataSetObserver;
+import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
+import androidx.viewpager.widget.PagerAdapter;
 
-import java.util.ArrayList;
+/**
+ * A PagerAdapter that wraps around another PagerAdapter to handle paging wrap-around.
+ */
+public class InfinitePagerAdapter extends PagerAdapter {
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
+    private static final String TAG = "InfinitePagerAdapter";
+    private static final boolean DEBUG = false;
 
+    private PagerAdapter adapter;
 
-public abstract class InfinitePagerAdapter<Type> extends FragmentStatePagerAdapter implements MvpAdapter<Type>
-    {
-        private final String TAG = "InfinitePagerAdapter";
-        private final boolean DEBUG = true;
-        public int LOOPS_COUNT = 400;
-        protected ArrayList<Type> DataList;
+    public InfinitePagerAdapter(PagerAdapter adapter) {
+        this.adapter = adapter;
+    }
 
-        public InfinitePagerAdapter(FragmentManager manager,ArrayList<Type> DataList)
-        {
-            super(manager);
-            this.DataList = DataList;
+    @Override
+    public int getCount() {
+        if (getRealCount() == 0) {
+            return 0;
         }
+        // warning: scrolling to very high values (1,000,000+) results in
+        // strange drawing behaviour
+        return Integer.MAX_VALUE;
+    }
 
-        @NonNull
-        @Override
-        public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            return super.instantiateItem(container, position);
-        }
+    /**
+     * @return the {@link #getCount()} result of the wrapped adapter
+     */
+    public int getRealCount() {
+        return adapter.getCount();
+    }
 
-        @Override
-        public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-            super.destroyItem(container, position, object);
-        }
+    @Override
+    public Object instantiateItem(ViewGroup container, int position) {
+        int virtualPosition = position % getRealCount();
+        debug("instantiateItem: real position: " + position);
+        debug("instantiateItem: virtual position: " + virtualPosition);
 
-        @Override
-        public Fragment getItem(int position)
-        {
-            if (DataList != null && DataList.size() > 0)
-            {
-                debug("getItem: real position: " + position);
-                position = getVirtualPosition(position); // use modulo for infinite cycling
-                debug("getItem: virtual position: " + position);
+        // only expose virtual position to the inner adapter
+        return adapter.instantiateItem(container, virtualPosition);
+    }
 
-                return setItemFragment(DataList, position);
+    @Override
+    public void destroyItem(ViewGroup container, int position, Object object) {
+        int virtualPosition = position % getRealCount();
+        debug("destroyItem: real position: " + position);
+        debug("destroyItem: virtual position: " + virtualPosition);
 
-            }
-            else
-            {
-                //TODO Size 0일때
-                return new Fragment();
-            }
-        }
+        // only expose virtual position to the inner adapter
+        adapter.destroyItem(container, virtualPosition, object);
+    }
 
-        abstract public Fragment setItemFragment(final ArrayList<Type> DataList, final int position);
+    /*
+     * Delegate rest of methods directly to the inner adapter.
+     */
 
-        @Override
-        public int getCount()
-        {
-            if (DataList != null && DataList.size() > 0)
-            {
-                return DataList.size()*LOOPS_COUNT; // simulate infinite by big number of products
-            }
-            else
-            {
-                return 1;
-            }
-        }
+    @Override
+    public void finishUpdate(ViewGroup container) {
+        adapter.finishUpdate(container);
+    }
 
-        public int getVirtualPosition(int position){
-            int count = DataList.size();
-            return count <= 0 ? 1:position % DataList.size();
-        }
+    @Override
+    public boolean isViewFromObject(View view, Object object) {
+        return adapter.isViewFromObject(view, object);
+    }
 
-        @Override
-        public ArrayList<Type> getList() {
-            return DataList;
-        }
+    @Override
+    public void restoreState(Parcelable bundle, ClassLoader classLoader) {
+        adapter.restoreState(bundle, classLoader);
+    }
 
-        @Override
-        public void setList(@NonNull ArrayList<Type> list) {
-            this.DataList = list;
-            notifyDataSetChanged();
-        }
+    @Override
+    public Parcelable saveState() {
+        return adapter.saveState();
+    }
 
-        @Override
-        public void addList(@NonNull ArrayList<Type> list) {
-            for(Type type : list)
-                this.DataList.add(type);
+    @Override
+    public void startUpdate(ViewGroup container) {
+        adapter.startUpdate(container);
+    }
 
-            notifyDataSetChanged();
-        }
+    @Override
+    public CharSequence getPageTitle(int position) {
+        int virtualPosition = position % getRealCount();
+        return adapter.getPageTitle(virtualPosition);
+    }
 
-        @Override
-        public void removeList() {
-            this.DataList.clear();
-            notifyDataSetChanged();
-        }
+    @Override
+    public float getPageWidth(int position) {
+        return adapter.getPageWidth(position);
+    }
 
-        public int getLoopsStartPostion(){
-            return DataList.size()*(LOOPS_COUNT/2);
-        }
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+        adapter.setPrimaryItem(container, position, object);
+    }
 
-        private void debug(String message) {
-            if (DEBUG) {
-                Log.e(TAG, message);
-            }
+    @Override
+    public void unregisterDataSetObserver(DataSetObserver observer) {
+        adapter.unregisterDataSetObserver(observer);
+    }
+
+    @Override
+    public void registerDataSetObserver(DataSetObserver observer) {
+        adapter.registerDataSetObserver(observer);
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemPosition(Object object) {
+        return adapter.getItemPosition(object);
+    }
+
+    public int getLoopStartPosition(){
+        return (Integer.MAX_VALUE/getCount()/2)*getCount();
+    }
+
+    /*
+     * End delegation
+     */
+
+    private void debug(String message) {
+        if (DEBUG) {
+            Log.d(TAG, message);
         }
     }
+
+}

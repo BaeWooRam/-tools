@@ -1,15 +1,7 @@
 package com.example.bwtools.android.tools.base.dto;
 
-import com.google.gson.annotations.SerializedName;
-
-import java.io.Serializable;
-
-public class Point implements Serializable {
-    @SerializedName("x")
-    private double longitude;
-
-    @SerializedName("y")
-    private double latitude;
+public class Point {
+    private double longitude,latitude;
 
     public Point(double longitude, double latitude) {
         this.longitude = longitude;

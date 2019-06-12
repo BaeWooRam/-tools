@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
@@ -55,6 +56,7 @@ public class HelperGps extends Service implements LocationListener {
                         mContext, android.Manifest.permission.ACCESS_COARSE_LOCATION)
                         != PackageManager.PERMISSION_GRANTED) {
 
+            Toast.makeText(mContext,"앱 권한에서 위치 관련 권한을 승인해주세요",Toast.LENGTH_SHORT).show();
             return null;
         }
 
@@ -185,18 +187,26 @@ public class HelperGps extends Service implements LocationListener {
     public IBinder onBind(Intent arg0) {
         return null;
     }
-
+    @Override
     public void onLocationChanged(Location location) {
+
+
     }
 
+    @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
+
     }
 
+    @Override
     public void onProviderEnabled(String provider) {
+
     }
 
+    @Override
     public void onProviderDisabled(String provider) {
 
     }
-}
 
+
+}

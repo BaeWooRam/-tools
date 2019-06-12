@@ -16,16 +16,11 @@ public class ApiRequest {
     private String requestMethod;
     private String BaseURL;
     private String responseResult;
-    private ArrayList<RequestQuery> requestQueryList;
-    private ArrayList<RequestBody> requestBodyList;
-    private ArrayList<RequestHead> requestHeaderList;
+    private final ArrayList<RequestQuery> requestQueryList = new ArrayList();
+    private final ArrayList<RequestBody> requestBodyList = new ArrayList();
+    private final ArrayList<RequestHead> requestHeaderList = new ArrayList();
     private boolean doAutoClear=true;
 
-    public ApiRequest() {
-        requestQueryList = new ArrayList();
-        requestBodyList = new ArrayList();
-        requestHeaderList = new ArrayList();
-    }
 
     public void setupRequestInfo(String BaseURL, String requestMethod){
         this.BaseURL = BaseURL;
@@ -87,10 +82,10 @@ public class ApiRequest {
             }
 
             br.close();
-            System.out.println("response = "+response.toString());
             setResponseResult(response.toString());
         } catch (Exception e) {
-            System.out.println("startRequest Error! "+e.toString());
+            e.printStackTrace();
+            new Error(e.toString());
         }
 
         if(doAutoClear){

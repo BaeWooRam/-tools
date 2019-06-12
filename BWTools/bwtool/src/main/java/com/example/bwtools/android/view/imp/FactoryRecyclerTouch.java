@@ -81,10 +81,6 @@ public abstract class FactoryRecyclerTouch implements RecyclerTouchImp {
         targetRecyclerView.setLayoutManager(LayoutManager);
     }
 
-    public void setupRecyclerDecoration(RecyclerView.ItemDecoration itemDecoration){
-        targetRecyclerView.addItemDecoration(itemDecoration);
-    }
-
     @Override
     public void setupRecyclerAnimator(RecyclerView.ItemAnimator recyclerAnimator) {
         targetRecyclerView.setItemAnimator(recyclerAnimator);
