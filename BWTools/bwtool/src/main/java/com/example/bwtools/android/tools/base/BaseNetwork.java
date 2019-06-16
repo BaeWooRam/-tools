@@ -5,21 +5,34 @@ import android.content.Context;
 import android.os.AsyncTask;
 
 import com.example.bwtools.R;
-import com.example.bwtools.android.tools.base.mvp.BaseApiServerInterface;
+import com.example.bwtools.android.tools.base.mvp.network.BaseApiServerInterface;
+import com.example.bwtools.android.tools.imp.PageManager;
 import com.example.bwtools.android.util.CommonUtils;
 
 import java.util.ArrayList;
 
 public abstract class BaseNetwork<doInBackground,OnPost> extends AsyncTask<doInBackground,Integer, ArrayList<OnPost>> implements BaseApiServerInterface<ArrayList<OnPost>> {
     protected final int PROGRESS_MAX = 100;
-    private ProgressDialog progressDialog;
-    protected int prgressStatus;
-    protected Context context;
-    private BaseDataManager<OnPost> baseDataManager;
 
+    private ProgressDialog progressDialog;
+    protected Context context;
+    private PageManager pageManager;
+    private boolean isExecute;
+    private boolean isResponseSuccess;
+
+    protected int prgressStatus;
 
     public BaseNetwork(Context context) {
         this.context = context;
+        isExecute = false;
+        isResponseSuccess = true;
+    }
+
+    public BaseNetwork(Context context, PageManager pageManager) {
+        this.context = context;
+        this.pageManager = pageManager;
+        isExecute = false;
+        isResponseSuccess = true;
     }
 
     public void setPrgressStatus(int value) {
@@ -31,9 +44,8 @@ public abstract class BaseNetwork<doInBackground,OnPost> extends AsyncTask<doInB
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
+        isExecute = true;
         progressDialog = CommonUtils.showLoadingDialog(context, R.layout.progress_dialog);
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
         progressDialog.setMax(PROGRESS_MAX);
         setPrgressStatus(0);
         OnPreExcute();
@@ -50,21 +62,17 @@ public abstract class BaseNetwork<doInBackground,OnPost> extends AsyncTask<doInB
         super.onPostExecute(onPost);
         OnPostExcute(onPost);
         cancelProgressDialog();
+        isExecute=false;
     }
 
     @Override
     protected void onCancelled() {
         super.onCancelled();
         cancelProgressDialog();
+        isExecute=false;
+        isResponseSuccess = false;
     }
 
-    public BaseDataManager<OnPost> getDataManager(){
-        return this.baseDataManager;
-    }
-
-    public void setDataManager(BaseDataManager<OnPost> baseDataManager) {
-        this.baseDataManager = baseDataManager;
-    }
 
     public void cancelProgressDialog(){
         progressDialog.setProgress(PROGRESS_MAX);
@@ -78,4 +86,41 @@ public abstract class BaseNetwork<doInBackground,OnPost> extends AsyncTask<doInB
 
     public abstract void OnPostExcute( ArrayList<OnPost> data);
     public abstract void OnPreExcute();
+
+
+    public boolean isExecute() {
+        return isExecute;
+    }
+
+    public boolean isResponseSuccess() {
+        return isResponseSuccess;
+    }
+
+    public void setPageManagerPageEnd(boolean isPageEnd) {
+        pageManager.setPageEnd(isPageEnd);
+    }
+
+    public void setPageManagerPageNow(int pageNow) {
+        pageManager.setPageNow(pageNow);
+    }
+
+    public void setPageManagerPageTotal(int pageTotal) {
+        pageManager.setPageTotal(pageTotal);
+    }
+
+    public boolean isPageManagerPageEnd() {
+        return pageManager.isPageEnd();
+    }
+
+    public int getPageManagerPageNow() {
+        return pageManager.getPageNow();
+    }
+
+    public int getPageManagerPageTotal() {
+        return pageManager.getPageTotal();
+    }
+
+    public void resetPageManagerPage(){
+        pageManager.resetPage();
+    }
 }

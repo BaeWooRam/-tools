@@ -12,6 +12,10 @@ public class Location implements Serializable {
     private String information;
     private Point locationPoint;
 
+    public Point getLocationPoint() {
+        return locationPoint;
+    }
+
     public String getNum() {
         return num;
     }

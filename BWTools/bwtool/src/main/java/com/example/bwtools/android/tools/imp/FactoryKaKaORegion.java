@@ -2,18 +2,11 @@ package com.example.bwtools.android.tools.imp;
 
 import android.app.ProgressDialog;
 
-import com.example.bwtools.android.tools.base.dto.KaKaORegion;
 import com.example.bwtools.android.tools.base.dto.Location;
-import com.example.bwtools.android.tools.base.dto.Point;
 import com.example.bwtools.android.tools.base.dto.Rect;
 import com.example.bwtools.android.tools.base.dto.RequestHead;
 import com.example.bwtools.android.tools.base.dto.RequestQuery;
 import com.example.bwtools.android.tools.interfaces.KaKaOLocalImp;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-
-import java.util.ArrayList;
 
 public class FactoryKaKaORegion implements KaKaOLocalImp {
     private final String BASE_URL =" https://dapi.kakao.com/v2/local/search/keyword.json";
@@ -41,9 +34,6 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
 
     private ApiRequest apiRequest;
     private ProgressDialog progressDialog;
-
-    private final int INT_MAX = 2147483647;
-    private int RegionID = 0;
 
     /**
      *  사용 예시)
@@ -151,60 +141,10 @@ public class FactoryKaKaORegion implements KaKaOLocalImp {
         apiRequest.startRequest();
     }
 
-    @Override
-    public ArrayList<KaKaORegion> getKaKaORegionList() {
-        return getParserRegionList();
-    }
 
+    @Override
     public String getResponse(){
         return apiRequest.getResponseResult();
-    }
-
-    public ArrayList<KaKaORegion> getParserRegionList() {
-        ArrayList<KaKaORegion> kakaoRegionArrayList = new ArrayList<>();
-        RegionID = 0;
-        try {
-            JsonArray regionArray = getRegionJsonArray(getResponse());
-
-            for (int position =0 ; position < regionArray.size(); position++) {
-                JsonObject regionObject = (JsonObject) regionArray.get(position);
-                kakaoRegionArrayList.add(insertKaKaORegionInfo(regionObject));
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return kakaoRegionArrayList;
-    }
-
-    public JsonArray getRegionJsonArray(String result){
-        JsonParser jsonParser = new JsonParser();
-        JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
-        return jsonObject.getAsJsonArray("documents");
-    }
-
-    public KaKaORegion insertKaKaORegionInfo(JsonObject jsonNaverRegions){
-        KaKaORegion kaKaORegion = new KaKaORegion();
-        kaKaORegion.setNum(String.valueOf(RegionID));
-        kaKaORegion.setAddress(jsonNaverRegions.get("address_name").getAsString());
-        kaKaORegion.setCategory(jsonNaverRegions.get("category_name").getAsString());
-        kaKaORegion.setName(jsonNaverRegions.get("place_name").getAsString());
-        kaKaORegion.setPhone(jsonNaverRegions.get("phone").getAsString());
-        kaKaORegion.setInternetURL(jsonNaverRegions.get("place_url").getAsString());
-        kaKaORegion.setLocationPoint(new Point(Double.valueOf(jsonNaverRegions.get("x").getAsString()),Double.valueOf(jsonNaverRegions.get("y").getAsString())));
-        kaKaORegion.setInternetURL(jsonNaverRegions.get("place_url").getAsString());
-
-        incrementRegionID();
-        return kaKaORegion;
-    }
-
-    private void incrementRegionID() {
-        int NextID = RegionID + 1;
-        if (NextID == INT_MAX)
-            new Error("Don't create NaverMapMaker");
-        else
-            RegionID++;
     }
 
 }

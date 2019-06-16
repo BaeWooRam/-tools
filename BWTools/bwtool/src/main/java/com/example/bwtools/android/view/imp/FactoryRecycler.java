@@ -11,13 +11,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-public abstract class FactoryRecyclerTouch implements RecyclerTouchImp {
+public abstract class FactoryRecycler implements RecyclerTouchImp {
     private final String TAG ="FactoryRecyclerTouch";
     private RecyclerView targetRecyclerView;
     private GestureDetector GestureDetector;
     private Activity targetActivity;
 
-    public FactoryRecyclerTouch(RecyclerView thisRecyclerView, Activity thisActivity) {
+    public FactoryRecycler(RecyclerView thisRecyclerView, Activity thisActivity) {
         this.targetRecyclerView = thisRecyclerView;
         this.targetActivity = thisActivity;
     }
@@ -116,4 +116,8 @@ public abstract class FactoryRecyclerTouch implements RecyclerTouchImp {
         targetRecyclerView.setAdapter(recyclerAdapter);
     }
 
+    @Override
+    public void setupsNestedScrollingEnabled(boolean enable) {
+        targetRecyclerView.setNestedScrollingEnabled(enable);
+    }
 }

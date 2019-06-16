@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,12 +16,17 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 
+import java.io.IOException;
+import java.util.List;
+
 import androidx.core.content.ContextCompat;
 
 
 public class HelperGps extends Service implements LocationListener {
     private final Context mContext;
+    private final int GEOGODE_RESULT_MAX = 20;
 
+    private Geocoder geocoder;
     // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
 
@@ -43,6 +50,12 @@ public class HelperGps extends Service implements LocationListener {
 
     public HelperGps(Context context) {
         this.mContext = context;
+        getLocation();
+    }
+
+    public HelperGps(Context context, Geocoder geocoder) {
+        this.mContext = context;
+        this.geocoder = geocoder;
         getLocation();
     }
 
@@ -198,5 +211,16 @@ public class HelperGps extends Service implements LocationListener {
     public void onProviderDisabled(String provider) {
 
     }
+
+    public String getTransformMyLocationToAddress(Location currentLocation) throws IOException {
+        try {
+            List<Address> fromLocation = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), GEOGODE_RESULT_MAX);
+            String currentAddress = fromLocation.get(0).getAddressLine(0).replace("대한민국 ","");
+            return currentAddress;
+        } catch (NullPointerException e) {
+            throw new NullPointerException(e.toString());
+        }
+    }
+
 }
 

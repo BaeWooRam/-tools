@@ -9,4 +9,5 @@ public interface RecyclerImp {
     void setupRecyclerGridLayoutOrientation(int span, int layoutOrientation, RecyclerView.ItemDecoration itemDecoration);
     void setupRecyclerAnimator(RecyclerView.ItemAnimator recyclerAnimation);
     void setupRecyclerAdapter(RecyclerView.Adapter recyclerAdapter);
+    void setupsNestedScrollingEnabled(boolean enable);
 }
