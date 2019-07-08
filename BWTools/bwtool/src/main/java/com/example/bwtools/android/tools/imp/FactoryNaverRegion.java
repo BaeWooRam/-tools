@@ -7,8 +7,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 
 import com.example.bwtools.R;
-import com.example.bwtools.android.tools.base.dto.NaverRegion;
-import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
+import com.example.bwtools.android.tools.dto.NaverRegion;
+import com.example.bwtools.android.tools.mvp.MvpAdapter;
 import com.example.bwtools.android.tools.interfaces.NaverLocalImp;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -26,8 +26,8 @@ import androidx.annotation.LayoutRes;
 
 public class FactoryNaverRegion implements NaverLocalImp {
     private final String TAG = "FactoryNaverRegion";
-    public static final int MAX_REGION_DATA =30;
-    public static final int MAX_DISPLAY =10;
+    private final int MAX_REGION_DATA =30;
+    private final int MAX_DISPLAY =10;
     private String searchText, ClientID, ClientSecret, sortAddress, sortCategoryAndDescription, requestResult;
     private int startCount = 1, position = 0, page = 0;
 
@@ -209,7 +209,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
     }
 
 
-    public int getRegionTotal(String result) {
+    private int getRegionTotal(String result) {
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
         String total;
@@ -222,7 +222,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         return total != null ? Integer.parseInt(total) : 0;
     }
 
-    public void restartParserRegionArray(ArrayList<NaverRegion> naverRegionsList) {
+    private void restartParserRegionArray(ArrayList<NaverRegion> naverRegionsList) {
 
         try {
             JsonArray RegionArray = getRegionJsonArray(requestResult);
@@ -257,13 +257,13 @@ public class FactoryNaverRegion implements NaverLocalImp {
         return naverRegionsList;
     }
 
-    public JsonArray getRegionJsonArray(String result){
+    private JsonArray getRegionJsonArray(String result){
         JsonParser jsonParser = new JsonParser();
         JsonObject jsonObject = jsonParser.parse(result).getAsJsonObject();
         return jsonObject.getAsJsonArray("items");
     }
 
-    public void insertRegionListFromMatchingItem(JsonArray item, ArrayList<NaverRegion> naverRegionsList, int position){
+    private void insertRegionListFromMatchingItem(JsonArray item, ArrayList<NaverRegion> naverRegionsList, int position){
         JsonObject jsonNaverRegions = (JsonObject) item.get(position);
         String address = jsonNaverRegions.get("address").getAsString();
         String category = jsonNaverRegions.get("category").getAsString();
@@ -273,7 +273,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         }
     }
 
-    public NaverRegion insertNaverRegionInfo(JsonObject jsonNaverRegions){
+    private NaverRegion insertNaverRegionInfo(JsonObject jsonNaverRegions){
         NaverRegion naverRegion = new NaverRegion();
         naverRegion.setAddress(jsonNaverRegions.get("address").getAsString());
         naverRegion.setCategory(jsonNaverRegions.get("category").getAsString());
@@ -284,12 +284,12 @@ public class FactoryNaverRegion implements NaverLocalImp {
         return naverRegion;
     }
 
-    public boolean isMaxSize(ArrayList<NaverRegion> naverRegionsList){
+    private boolean isMaxSize(ArrayList<NaverRegion> naverRegionsList){
 
         return naverRegionsList.size()>=MAX_DISPLAY? true : false;
     }
 
-    public boolean isContainAddress(String targetAddress) {
+    private boolean isContainAddress(String targetAddress) {
         if (targetAddress == null)
             return true;
         else{
@@ -297,7 +297,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         }
     }
 
-    public boolean isContainDescription(String targetDescription) {
+    private boolean isContainDescription(String targetDescription) {
         if (targetDescription == null)
             return true;
         else{
@@ -305,7 +305,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         }
     }
 
-    public boolean isContainCategory(String targetCategory) {
+    private boolean isContainCategory(String targetCategory) {
         if (targetCategory == null)
             return true;
         else{
@@ -313,15 +313,15 @@ public class FactoryNaverRegion implements NaverLocalImp {
         }
     }
 
-    public boolean isContainCategoryOrDescription(String sortCategoryAndDescription) {
+    private boolean isContainCategoryOrDescription(String sortCategoryAndDescription) {
         return (isContainDescription(sortCategoryAndDescription) || isContainCategory(sortCategoryAndDescription) ? true : false);
     }
 
-    public boolean isContainCategoryAndAddress(String targetCategoryAndDescription, String targetAddress) {
+    private boolean isContainCategoryAndAddress(String targetCategoryAndDescription, String targetAddress) {
         return (isContainCategoryOrDescription(targetCategoryAndDescription) && isContainAddress(targetAddress) ? true : false);
     }
 
-    public ProgressDialog showLoadingDialog() {
+    private ProgressDialog showLoadingDialog() {
         progressDialog.show();
         if (progressDialog.getWindow() != null) {
             progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -333,7 +333,7 @@ public class FactoryNaverRegion implements NaverLocalImp {
         return progressDialog;
     }
 
-    public void hideLoading() {
+    private void hideLoading() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }

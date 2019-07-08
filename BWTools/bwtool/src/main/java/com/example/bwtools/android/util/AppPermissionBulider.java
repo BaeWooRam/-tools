@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 
 public class AppPermissionBulider {
-    public static final int CHECK_PERMISSION = 100;
+    private static final int CHECK_PERMISSION = 100;
     private String[] mRequestPermission;
     private Activity mActContext;
     private Fragment mFrgContext;
@@ -53,7 +53,7 @@ public class AppPermissionBulider {
 
     class AppPermission{
 
-        public AppPermission(Activity context, String[] requestPermission) {
+        private AppPermission(Activity context, String[] requestPermission) {
             if(requestPermission != null && requestPermission.length>0){
                 Log.e("AppPermission", "Start!");
                 checkAndRequestPermission(context, AppPermissionBulider.CHECK_PERMISSION,requestPermission);
@@ -62,7 +62,7 @@ public class AppPermissionBulider {
                 throw new Error("AppPermissionBulider build() Error : Please Input Permission!");
         }
 
-        public AppPermission(Fragment context, String[] requestPermission) {
+        private AppPermission(Fragment context, String[] requestPermission) {
             if(requestPermission != null && requestPermission.length>0){
                 Log.e("AppPermission", "Start!");
                 checkAndRequestPermission(context, AppPermissionBulider.CHECK_PERMISSION,requestPermission);
@@ -75,31 +75,25 @@ public class AppPermissionBulider {
 
 
 
-        public boolean checkAndRequestPermission(Activity activity, int permissionRequestCode, String... permissions) {
+        private void checkAndRequestPermission(Activity activity, int permissionRequestCode, String... permissions) {
             String[] requiredPermissions = getRequiredPermissions(activity, permissions);
             if ((requiredPermissions.length > 0) && (!activity.isDestroyed())) {
                 ActivityCompat.requestPermissions(activity, requiredPermissions, permissionRequestCode);
-                return false;
-            } else {
-                return true;
             }
         }
 
 
 
-        public boolean checkAndRequestPermission(Fragment fragment, int permissionRequestCode, String... permissions) {
+        private void checkAndRequestPermission(Fragment fragment, int permissionRequestCode, String... permissions) {
             String[] requiredPermissions = getRequiredPermissions(fragment.getContext() != null ?
                     fragment.getContext() : fragment.getActivity(), permissions);
 
             if (requiredPermissions.length > 0 && fragment.isAdded()) {
                 fragment.requestPermissions(requiredPermissions, permissionRequestCode);
-                return false;
-            } else {
-                return true;
             }
         }
 
-        public String[] getRequiredPermissions(Context context, String... permissions) {
+        private String[] getRequiredPermissions(Context context, String... permissions) {
             List<String> requiredPermissions = new ArrayList<>();
 
             // Context가 null이면 무조건 권한을 요청하도록 requiredPermissions가 존재한다고 reutrn 한다
