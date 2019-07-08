@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,20 +13,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 import androidx.core.content.ContextCompat;
 
 
 public class HelperGps extends Service implements LocationListener {
     private final Context mContext;
-    private final int GEOGODE_RESULT_MAX = 20;
 
-    private Geocoder geocoder;
     // 현재 GPS 사용유무
     boolean isGPSEnabled = false;
 
@@ -46,18 +37,13 @@ public class HelperGps extends Service implements LocationListener {
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10;
 
     // 최소 GPS 정보 업데이트 시간 밀리세컨이므로 1분
-    private static final long MIN_TIME_BW_UPDATES = 1000;
+    private static final long MIN_TIME_BW_UPDATES = 1000 * 60 * 1;
 
     protected LocationManager locationManager;
 
     public HelperGps(Context context) {
         this.mContext = context;
-        this.geocoder = new Geocoder(context, Locale.KOREAN);
-    }
-
-    public HelperGps(Context context, Geocoder geocoder) {
-        this.mContext = context;
-        this.geocoder = geocoder;
+        getLocation();
     }
 
     public Location getLocation() {
@@ -85,7 +71,7 @@ public class HelperGps extends Service implements LocationListener {
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
 
             if (!isGPSEnabled && !isNetworkEnabled) {
-                showSettingsAlert();
+                // GPS 와 네트워크사용이 가능하지 않을때 소스 구현
             } else {
                 this.isGetLocation = true;
                 // 네트워크 정보로 부터 위치값 가져오기
@@ -173,8 +159,8 @@ public class HelperGps extends Service implements LocationListener {
     public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
 
-        alertDialog.setTitle("GPS 사용유무 설정");
-        alertDialog.setMessage("현재 GPS 설정이 되지 않았습니다. \n 설정창으로 가시겠습니까?");
+        alertDialog.setTitle("GPS 사용유무셋팅");
+        alertDialog.setMessage("GPS 셋팅이 되지 않았을수도 있습니다. \n 설정창으로 가시겠습니까?");
 
         // OK 를 누르게 되면 설정창으로 이동합니다.
         alertDialog.setPositiveButton("Settings",
@@ -212,46 +198,5 @@ public class HelperGps extends Service implements LocationListener {
     public void onProviderDisabled(String provider) {
 
     }
-
-    public String getTransformMyLocationToAddress(Location currentLocation) throws IOException {
-        try {
-            List<Address> fromLocation = geocoder.getFromLocation(currentLocation.getLatitude(), currentLocation.getLongitude(), GEOGODE_RESULT_MAX);
-            String currentAddress = fromLocation.get(0).getAddressLine(0).replace("대한민국 ","");
-
-            for(Address address:fromLocation){
-                Log.e("Address",""+address.getAddressLine(0).replace("대한민국 ",""));
-                Log.e("AdminArea",""+address.getAdminArea());
-                Log.e("CountryName",""+address.getCountryName());
-                Log.e("Locality",""+address.getLocality());
-                Log.e("SubLocality",""+address.getSubLocality());
-            }
-
-            return currentAddress;
-        } catch (NullPointerException e) {
-            throw new NullPointerException(e.toString());
-        }
-    }
-
-    public Location findGeoPoint(String targetAddress) {
-        Location loc = new Location("");
-        List<Address> addr = null;// 한좌표에 대해 두개이상의 이름이 존재할수있기에 주소배열을 리턴받기 위해 설정
-
-        try {
-            addr = geocoder.getFromLocationName(targetAddress, GEOGODE_RESULT_MAX);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        if (addr != null) {
-            for (Address address :addr) {
-                Log.i("helperGps","location longitude = "+address.getLongitude()+", location latitude"+address.getLatitude());
-            }
-            loc.setLatitude(addr.get(0).getLatitude());
-            loc.setLongitude(addr.get(0).getLongitude());
-        }
-
-        return loc;
-    }
-
 }
 

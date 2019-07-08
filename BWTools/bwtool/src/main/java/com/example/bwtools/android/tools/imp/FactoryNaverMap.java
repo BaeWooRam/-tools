@@ -1,6 +1,7 @@
 package com.example.bwtools.android.tools.imp;
 
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.view.View;
 
 import com.example.bwtools.android.tools.interfaces.NaverMaplmp;
@@ -24,44 +25,32 @@ import java.util.Map;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentManager;
 
 
 public class FactoryNaverMap implements NaverMaplmp {
     private final String TAG = "FactoryNaverLogin";
     private final int INT_MAX = 2147483647;
-
-    public final int IMPORTANT_HIGH = 3;
-    public final int IMPORTANT_NORMAL = 2;
-    public final int IMPORTANT_LOW = 1;
-
     private NaverMap targetNaverMap;
     private Map<String, OverlayImage> markerOverlayImageMap;
     private Map<Object, Marker> markerMap;
     private static MapFragment naverMapFragment;
 
-    private List<Object> importantHighMarkers;
-    private List<Object> importantLowMarkers;
-
     private int MarkerID = 0;
 
-    public FactoryNaverMap() {
+    public FactoryNaverMap(@NonNull NaverMap thisNaverMap) {
+        targetNaverMap = thisNaverMap;
         markerOverlayImageMap = new HashMap<>();
         markerMap = new HashMap<>();
-        importantLowMarkers = new ArrayList<>();
-        importantHighMarkers = new ArrayList<>();
     }
 
-    public void setNaverMap(NaverMap targetNaverMap){
-        this.targetNaverMap = targetNaverMap;
-    }
-
-    public void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int fragmentMapID) {
+    public static void setupNaverMap(FragmentManager fragmentManager, OnMapReadyCallback mapReadyCallback, @IdRes int fragmentMapID) {
         findByNaverMapAndFragmentCommit(fragmentManager, fragmentMapID);
         naverMapFragment.getMapAsync(mapReadyCallback);
     }
 
-    private void findByNaverMapAndFragmentCommit(FragmentManager fragmentManager, @IdRes int fragmentMapID) {
+    private static void findByNaverMapAndFragmentCommit(FragmentManager fragmentManager, @IdRes int fragmentMapID) {
         naverMapFragment = (MapFragment) fragmentManager.findFragmentById(fragmentMapID);
         if (naverMapFragment == null) {
             naverMapFragment = MapFragment.newInstance();
@@ -69,6 +58,47 @@ public class FactoryNaverMap implements NaverMaplmp {
         }
     }
 
+    public void onViewCreated(@Nullable Bundle savedInstanceState) {
+        if (naverMapFragment == null)
+            naverMapFragment.onCreate(savedInstanceState);
+    }
+
+    public void onFragmentStart() {
+        if (naverMapFragment == null)
+            naverMapFragment.onStart();
+    }
+
+    public void onFragmentResume() {
+        if (naverMapFragment == null)
+            naverMapFragment.onResume();
+    }
+
+    public void onFragmentPause() {
+        if (naverMapFragment == null)
+            naverMapFragment.onPause();
+    }
+
+    public void onFragmentSaveInstanceState(Bundle outState) {
+        if (naverMapFragment == null)
+            naverMapFragment.onSaveInstanceState(outState);
+    }
+
+    public void onFragmentStop() {
+        if (naverMapFragment == null)
+            naverMapFragment.onStop();
+    }
+
+    public void onFragmentDestroyView() {
+        if (naverMapFragment == null)
+            naverMapFragment.onDestroy();
+        removeAllMarker();
+    }
+
+    public void onFragmentLowMemory() {
+        if (naverMapFragment == null)
+            naverMapFragment.onLowMemory();
+    }
+    //맵 상에서 보여줄 것들에 대한 세팅
 
     /**
      * 마커에 오버레이 이미지를 사용하기 위해서는 여기서 등록해야한다.(Resource)
@@ -108,9 +138,7 @@ public class FactoryNaverMap implements NaverMaplmp {
 
     public void removeTargetMarker(@NonNull Object tag) {
         Marker targetMarker = markerMap.get(tag);
-
-        if(targetMarker != null)
-            targetMarker.setMap(null);
+        targetMarker.setMap(null);
     }
 
     /**
@@ -306,68 +334,6 @@ public class FactoryNaverMap implements NaverMaplmp {
         newMarker.setCaptionText(makerContents);
         incrementMarkerID();
         return newMarker;
-    }
-
-    public void transformImportantMarkers(@NonNull Object makerTag, int Important){
-        Marker marker = getMarker(makerTag);
-        marker.setZIndex(Important);
-        marker.setForceShowIcon(true);
-        showMarker(marker);
-    }
-
-    public void transformImportantHighOnlyThisMarker(@NonNull Object makerTag){
-        removeImportantHighMarker();
-        transformImportantHighMarker(makerTag);
-    }
-
-    public void transformImportantLowOnlyThisMarker(@NonNull Object makerTag){
-        removeImportantLowMarker();
-        transformImportantLowMarker(makerTag);
-    }
-
-    public void removeImportantHighMarker(){
-
-        //important High였던 마크들을 다시 Normarl로 바꾼다.
-        for(Object tag : importantHighMarkers){
-            transformImportantNormalMarker(tag);
-        }
-
-        //important High의 tag값을 저장했던 배열도 초기화한다.
-        importantHighMarkers.clear();
-    }
-
-    public void removeImportantLowMarker(){
-
-        for(Object tag : importantLowMarkers){
-            transformImportantNormalMarker(tag);
-        }
-
-        importantLowMarkers.clear();
-    }
-    public void transformImportantHighMarker(@NonNull Object makerTag){
-        Marker marker = getMarker(makerTag);
-        marker.setZIndex(IMPORTANT_HIGH);
-        marker.setForceShowIcon(true);
-        showMarker(marker);
-        importantHighMarkers.add(makerTag);
-    }
-
-    public void transformImportantNormalMarker(@NonNull Object makerTag){
-        Marker marker = getMarker(makerTag);
-        marker.setZIndex(IMPORTANT_NORMAL);
-        marker.setForceShowIcon(true);
-        showMarker(marker);
-    }
-
-    public void transformImportantLowMarker(@NonNull Object makerTag){
-        Marker marker = getMarker(makerTag);
-        marker.setZIndex(IMPORTANT_LOW);
-        marker.setForceShowIcon(false);
-        importantLowMarkers.add(makerTag);
-    }
-
-    public Marker getMarker(@NonNull Object makerTag){
-        return markerMap.get(makerTag);
     }
 
     private void incrementMarkerID() {

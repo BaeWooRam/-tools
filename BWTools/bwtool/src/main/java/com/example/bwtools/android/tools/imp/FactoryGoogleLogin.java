@@ -8,6 +8,7 @@ import com.example.bwtools.R;
 import com.example.bwtools.android.tools.interfaces.GoogleLoginImp;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +24,7 @@ public class FactoryGoogleLogin implements GoogleLoginImp {
     public final int RC_GET_TOKEN = 9002;
     private Activity targetActivity;
     private Fragment targetFragment;
-    private com.google.android.gms.auth.api.signin.GoogleSignInClient GoogleSignInClient;
+    private GoogleSignInClient GoogleSignInClient;
     private GoogleSignInOptions googleSignInOptions;
 
     public FactoryGoogleLogin(Activity thisActivity, Fragment thisFragment) {

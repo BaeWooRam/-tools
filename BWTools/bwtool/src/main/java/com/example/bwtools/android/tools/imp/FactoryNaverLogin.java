@@ -17,12 +17,12 @@ public abstract class FactoryNaverLogin implements NaverLoginImp {
     private String OAUTH_CLIENT_SECRET;
     private String OAUTH_CLIENT_NAME;
 
-    private final OAuthLogin OAuthLoginInstance = OAuthLogin.getInstance();
+    private final static OAuthLogin OAuthLoginInstance = OAuthLogin.getInstance();
     private Activity targetActivity;
     /**
      * startOAuthLoginActivity() 호출시 인자로 넘기거나, OAuthLoginButton 에 등록해주면 인증이 종료되는 걸 알 수 있다.
      */
-    private com.nhn.android.naverlogin.OAuthLoginHandler OAuthLoginHandler = new OAuthLoginHandler() {
+    private OAuthLoginHandler OAuthLoginHandler = new OAuthLoginHandler() {
         @Override
         public void run(boolean success) {
             if (success) {
@@ -36,7 +36,7 @@ public abstract class FactoryNaverLogin implements NaverLoginImp {
 
     };
 
-    public com.nhn.android.naverlogin.OAuthLoginHandler getOAuthLoginHandler() {
+    public OAuthLoginHandler getOAuthLoginHandler() {
         return OAuthLoginHandler;
     }
 

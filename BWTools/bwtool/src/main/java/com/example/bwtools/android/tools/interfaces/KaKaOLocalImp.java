@@ -1,11 +1,20 @@
 package com.example.bwtools.android.tools.interfaces;
 
-import com.example.bwtools.android.tools.dto.Point;
-import com.example.bwtools.android.tools.dto.Rect;
+import com.example.bwtools.android.tools.base.dto.KaKaORegion;
+import com.example.bwtools.android.tools.base.dto.Location;
+import com.example.bwtools.android.tools.base.dto.Rect;
 
-public interface KaKaOLocalImp extends KaKaOImp {
+import java.util.ArrayList;
+
+public interface KaKaOLocalImp {
+    void setupBaseURLAndRequestMethod();
+    void setupKeyWord(String query);
     void setupKeyWordAndCategoryCode(String query, String categoryCode);
-    void setupLocationRange(Point location, int radius);
+    void setupAuthorization(String kakaoApiKey);
+    void setupAutoClear(boolean doAutoClear);
+    void setupLocationRange(Location location, int radius);
     void setupLocationRange(Rect locationRange);
     void setupRequestOption(int pageNum, int displayCount, String sortMethod);
+    void startRequestQuery();
+    ArrayList<KaKaORegion> getKaKaORegionList();
 }

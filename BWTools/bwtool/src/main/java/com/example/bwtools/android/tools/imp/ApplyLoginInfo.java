@@ -9,7 +9,7 @@ import com.google.gson.JsonParser;
 
 
 public abstract class ApplyLoginInfo {
-    private final String TAG = "GoogleLoginInfoBuilder";
+    private static final String TAG = "GoogleLoginInfoBuilder";
     private TextView Email;
     private TextView Name;
     private ImageView Image;
@@ -52,18 +52,16 @@ public abstract class ApplyLoginInfo {
     }
 
 
-    private boolean GoogleApplayInfo(GoogleSignInAccount account) {
+    public boolean GoogleApplayInfo(GoogleSignInAccount account) {
         if(account == null)
             return false;
 
         String imageUrl = account.getPhotoUrl().toString();
-
-        if(imageUrl != null)
-            ApplyInfo(imageUrl, account.getEmail(), account.getDisplayName());
+        ApplyInfo(imageUrl, account.getEmail(), account.getDisplayName());
         return true;
     }
 
-    private boolean NaverApplayInfo(String account){
+    public boolean NaverApplayInfo(String account){
         if(account == null)
             return false;
 
@@ -82,7 +80,7 @@ public abstract class ApplyLoginInfo {
         return true;
     }
 
-    private void ApplyInfo(String imageUrl, String email, String name) {
+    public void ApplyInfo(String imageUrl, String email, String name) {
         if (Image != null) {
             ApplyPicture(Image,imageUrl);
         }
@@ -95,6 +93,10 @@ public abstract class ApplyLoginInfo {
     }
 
 
+    /**
+     * Picasso or Gilde 처리 해주는 곳
+     * @param image
+     */
     public abstract void ApplyPicture(ImageView image, String str_imageUrl);
 }
 
