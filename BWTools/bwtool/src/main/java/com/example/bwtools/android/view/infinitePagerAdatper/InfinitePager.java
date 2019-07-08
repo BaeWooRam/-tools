@@ -79,9 +79,9 @@ public class InfinitePager extends ViewPager {
                         break;
                     case MotionEvent.ACTION_UP:
                         startAutoScroll();
+                        v.performClick();
                         break;
                 }
-
                 return false;
             }
         });

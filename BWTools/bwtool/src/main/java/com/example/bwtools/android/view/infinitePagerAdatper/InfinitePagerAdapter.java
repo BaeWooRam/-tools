@@ -3,7 +3,7 @@ package com.example.bwtools.android.view.infinitePagerAdatper;
 import android.util.Log;
 import android.view.ViewGroup;
 
-import com.example.bwtools.android.tools.base.mvp.MvpAdapter;
+import com.example.bwtools.android.tools.mvp.MvpAdapter;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public abstract class InfinitePagerAdapter<Type> extends FragmentStatePagerAdapt
         public int LOOPS_COUNT = 400;
         protected ArrayList<Type> DataList;
 
-        public InfinitePagerAdapter(FragmentManager manager,ArrayList<Type> DataList)
+        public InfinitePagerAdapter(FragmentManager manager, ArrayList<Type> DataList)
         {
             super(manager);
             this.DataList = DataList;

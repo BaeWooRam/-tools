@@ -1,8 +1,8 @@
 package com.example.bwtools.android.tools.imp;
 
-import com.example.bwtools.android.tools.base.dto.RequestBody;
-import com.example.bwtools.android.tools.base.dto.RequestHead;
-import com.example.bwtools.android.tools.base.dto.RequestQuery;
+import com.example.bwtools.android.tools.dto.RequestBody;
+import com.example.bwtools.android.tools.dto.RequestHead;
+import com.example.bwtools.android.tools.dto.RequestQuery;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -11,8 +11,8 @@ import java.net.URL;
 import java.util.ArrayList;
 
 public class ApiRequest {
-    public static final String HttpCONNECTTION_GET = "GET";
-    public static final String HttpCONNECTTION_POST = "POST";
+    public final String HttpCONNECTTION_GET = "GET";
+    public final String HttpCONNECTTION_POST = "POST";
     private String requestMethod;
     private String BaseURL;
     private String responseResult;
@@ -20,6 +20,7 @@ public class ApiRequest {
     private ArrayList<RequestBody> requestBodyList;
     private ArrayList<RequestHead> requestHeaderList;
     private boolean doAutoClear=true;
+    private boolean isDebug = true;
 
     public ApiRequest() {
         requestQueryList = new ArrayList();
@@ -48,15 +49,15 @@ public class ApiRequest {
         this.requestHeaderList.add(requestHead);
     }
 
-    public void clearRequestBody() {
+    private void clearRequestBody() {
         this.requestBodyList.clear();
     }
 
-    public void clearRequestHead() {
+    private void clearRequestHead() {
         this.requestHeaderList.clear();
     }
 
-    public void clearRequestQuery() {
+    private void clearRequestQuery() {
         this.requestQueryList.clear();
     }
 
@@ -68,6 +69,10 @@ public class ApiRequest {
             con.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
             con.setRequestProperty("charset", "utf-8");
             con.setRequestMethod(this.requestMethod);
+
+            if(isDebug)
+                System.out.println(con.toString());
+
             this.settingRequestHead(con);
 
             int responseCode = con.getResponseCode();
@@ -87,7 +92,10 @@ public class ApiRequest {
             }
 
             br.close();
-            System.out.println("response = "+response.toString());
+
+            if(isDebug)
+                System.out.println("response = "+response.toString());
+
             setResponseResult(response.toString());
         } catch (Exception e) {
             System.out.println("startRequest Error! "+e.toString());
@@ -100,9 +108,8 @@ public class ApiRequest {
         }
     }
 
-    public void setResponseResult(String responseResult) {
+    private void setResponseResult(String responseResult) {
         this.responseResult = responseResult != null ? responseResult : "결과 없음";
-        System.out.println(this.responseResult);
     }
 
     public String getResponseResult() {
@@ -110,31 +117,36 @@ public class ApiRequest {
     }
 
 
-    public String getRequestURL() {
-        String requestURL = BaseURL;
+    private String getRequestURL() {
+        StringBuilder request = new StringBuilder();
 
         for(int index=0;index<requestQueryList.size();index++) {
             RequestQuery requestQuery = requestQueryList.get(index);
             String propertyKey = requestQuery.getKey();
             String propertyValue = requestQuery.getQuery();
 
-            if(index==0)
-                requestURL += "?"+propertyKey+"="+propertyValue;
-            else
-                requestURL += "&"+propertyKey+"="+propertyValue;
+            if(index==0){
+                request.append(BaseURL);
+                request.append("?"+propertyKey);
+                request.append("="+propertyValue);
+            }
+            else{
+                request.append("&"+propertyKey);
+                request.append("="+propertyValue);
+            }
         }
 
-        return requestURL;
+        return request.toString();
     }
 
-    public void settingRequestHead(HttpURLConnection con) {
+    private void settingRequestHead(HttpURLConnection con) {
         if(requestHeaderList.size()==0)
             return;
 
         for(RequestHead requestHead :requestHeaderList) {
             String propertyKey = requestHead.getKey();
-            Object propertyValue = requestHead.getValue();
-            con.setRequestProperty(propertyKey, (String)propertyValue);
+            String propertyValue = requestHead.getValue();
+            con.setRequestProperty(propertyKey, propertyValue);
         }
     }
 
