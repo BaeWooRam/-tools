@@ -1,4 +1,4 @@
-package com.onedtwod.illuwa.util.permission
+package com.example.bwtools.android.permission
 
 import android.content.Context
 import android.content.pm.PackageManager
@@ -112,6 +112,13 @@ class AppPermission : BasePermission() {
         return true
     }
 
+    /**
+     * 요청한 Permission Activity Result 체크
+     */
+    fun isActivityResult(resultRequestCode: Int, grantResults: IntArray):Boolean{
+        return isRequestCode(resultRequestCode) && isGrantResults(grantResults)
+    }
+
     override fun excute() {
         if (checkRequestPermission())
             when {
@@ -120,4 +127,5 @@ class AppPermission : BasePermission() {
                 else -> Log.e(TAG, "Activity and Fragment is Null")
             }
     }
+
 }

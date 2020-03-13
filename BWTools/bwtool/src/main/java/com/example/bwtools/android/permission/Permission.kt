@@ -1,17 +1,8 @@
-package com.onedtwod.illuwa.util.permission
+package com.example.bwtools.android.permission
 
 import android.app.Activity
 import androidx.fragment.app.Fragment
 
-interface Permission {
-    interface Target {
-        fun target(targetActivity: Activity?): Request?
-        fun target(targetFragment: Fragment?): Request?
-    }
-
-    interface Request {
-        fun requestPermission(requestPermission: Array<String>?): Permission?
-    }
-
+interface Permission: Request, Target {
     fun excute()
 }
