@@ -1,19 +1,4 @@
-/*
- * Copyright (C) 2017 MINDORKS NEXTGEN PRIVATE LIMITED
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     https://mindorks.com/license/apache-v2
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License
- */
-
-package com.example.bwtools.android.util;
+package com.example.bwtools.android.utils;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
@@ -37,9 +22,6 @@ public final class CommonUtils {
     private static final String TAG = "CommonUtils";
     public static final String TIMESTAMP_FORMAT = "yyyyMMdd_HHmmss";
 
-    private CommonUtils() {
-        // This utility class is not publicly instantiable
-    }
 
     public static ProgressDialog showLoadingDialog(Context context, @LayoutRes int progress_dialog) {
         ProgressDialog progressDialog = new ProgressDialog(context);
@@ -60,7 +42,6 @@ public final class CommonUtils {
     }
 
 
-
     public static String loadJSONFromAsset(Context context, String jsonFileName)
             throws IOException {
 
@@ -78,9 +59,4 @@ public final class CommonUtils {
     public static String getTimeStamp() {
         return new SimpleDateFormat(TIMESTAMP_FORMAT, Locale.KOREA).format(new Date());
     }
-
- 
-
-
-
 }

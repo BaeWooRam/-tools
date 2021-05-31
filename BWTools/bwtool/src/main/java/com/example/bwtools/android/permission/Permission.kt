@@ -1,8 +1,15 @@
 package com.example.bwtools.android.permission
 
 import android.app.Activity
-import androidx.fragment.app.Fragment
 
-interface Permission: Request, Target {
-    fun excute()
+interface Permission {
+    interface Target {
+        fun target(targetActivity: Activity?): Request?
+    }
+
+    interface Request {
+        fun requestPermission(requestPermission: Array<String>?): Permission?
+    }
+
+    fun execute()
 }

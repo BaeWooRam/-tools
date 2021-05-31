@@ -5,7 +5,7 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.util.ArrayList
+import java.util.*
 
 /**
  * 날짜 : 2019-09-23
@@ -27,27 +27,16 @@ class AppPermission : BasePermission() {
 
         if (!isGrantPermission){
             if(!targetActivity!!.isDestroyed){
-                ActivityCompat.requestPermissions(targetActivity!!, requiredPermissions, CHECK_PERMISSION)
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(targetActivity!!, requiredPermissions[0])) {
+                    Log.d("AppPermission", "shouldShowRequestPermissionRationale true")
+                } else {
+                    ActivityCompat.requestPermissions(targetActivity!!, requiredPermissions, CHECK_PERMISSION)
+                }
             }else
                 Log.e(TAG, "Activity is Destroyed")
         }
     }
-
-    /**
-     * 요청한 Permission 체크 이후 요청실행(Fragment)
-     */
-    private fun checkAndRequestFragmentPermission() {
-        requiredPermissions = getGrantedPermissionList()
-        isGrantPermission = checkRequiredPermission()
-
-        if (!isGrantPermission) {
-            if(targetFragment!!.isAdded){
-                targetFragment!!.requestPermissions(requiredPermissions, CHECK_PERMISSION)
-            }else
-                Log.e(TAG, "Fragment is not added")
-        }
-    }
-
 
     /**
      * 아직 필요한 Permission 중 승인되지 않은 목록을 가져온다.
@@ -86,13 +75,14 @@ class AppPermission : BasePermission() {
     private fun getTargetContext(): Context? {
         return when {
             targetActivity != null -> targetActivity!!.baseContext
-            targetFragment != null -> targetFragment!!.context
             else -> null
         }
     }
 
     /**
      * 요청한 Permission requestCode 비교
+     * ex) permission.isRequestCode(requestCode) && permission.isGrantResults(grantResults)
+     *
      * @param resultRequestCode onRequestPermissionsResult -> requestCode
      */
     fun isRequestCode(resultRequestCode: Int): Boolean {
@@ -100,7 +90,9 @@ class AppPermission : BasePermission() {
     }
 
     /**
-     * 요청한 Permission Grant 결과
+     * 요청한 Permission Grant 결과확인
+     * ex) permission.isRequestCode(requestCode) && permission.isGrantResults(grantResults)
+     *
      * @param grantResults onRequestPermissionsResult -> grantResults
      */
     fun isGrantResults(grantResults: IntArray): Boolean {
@@ -112,20 +104,15 @@ class AppPermission : BasePermission() {
         return true
     }
 
-    /**
-     * 요청한 Permission Activity Result 체크
-     */
-    fun isActivityResult(resultRequestCode: Int, grantResults: IntArray):Boolean{
-        return isRequestCode(resultRequestCode) && isGrantResults(grantResults)
-    }
-
-    override fun excute() {
+    override fun execute() {
         if (checkRequestPermission())
             when {
                 targetActivity != null -> checkAndRequestActivtiyPermission()
-                targetFragment != null -> checkAndRequestFragmentPermission()
                 else -> Log.e(TAG, "Activity and Fragment is Null")
             }
     }
 
+    companion object{
+
+    }
 }
