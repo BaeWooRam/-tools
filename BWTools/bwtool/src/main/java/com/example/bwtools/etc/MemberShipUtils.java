@@ -1,4 +1,4 @@
-package com.example.bwtools.common;
+package com.example.bwtools.etc;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

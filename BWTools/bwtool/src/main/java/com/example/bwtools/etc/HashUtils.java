@@ -1,4 +1,4 @@
-package com.example.bwtools.common;
+package com.example.bwtools.etc;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
