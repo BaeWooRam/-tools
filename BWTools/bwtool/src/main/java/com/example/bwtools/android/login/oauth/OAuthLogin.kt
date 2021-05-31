@@ -2,7 +2,6 @@ package com.example.bwtools.android.login.oauth
 
 import android.app.Activity
 import android.util.Log
-import java.lang.NullPointerException
 
 abstract class OAuthLogin(activity: Activity) :
     OAuth {
@@ -67,6 +66,7 @@ abstract class OAuthLogin(activity: Activity) :
         return oAuth!![loginType.value - 1] as T
     }
 
+    @Throws(NullPointerException::class)
     private fun checkOAuth(){
         if(oAuth == null){
             throw NullPointerException("OAuth is Null!")
