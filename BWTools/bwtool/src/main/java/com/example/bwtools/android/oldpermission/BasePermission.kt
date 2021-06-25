@@ -1,4 +1,4 @@
-package com.example.bwtools.android.permission
+package com.example.bwtools.android.oldpermission
 
 import android.app.Activity
 
