@@ -7,6 +7,10 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 
+/**
+ * 앱 권한 체커
+ * @author 배우람
+ */
 class PermissionChecker : Permission.Target, Permission.Listener, Permission.Request {
     private val debugTag: String = javaClass.simpleName
     private var target: AppCompatActivity? = null
@@ -25,11 +29,12 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 퍼미션 요청을 위한 Launcher 초기화(필수)
+     * @author 배우람
      */
     fun initPermissionLauncher(target: AppCompatActivity): PermissionChecker {
         //init single permission launcher
         launchPermission =
-            target!!.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
+            target.registerForActivityResult(ActivityResultContracts.RequestPermission()) {
                 Log.d(debugTag, "lunchPermission() result = $it")
                 if (it){
                     isGrantPermission = true
@@ -43,7 +48,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
         //init multi permission launcher
         launchMultiplePermissions =
-            target!!.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
+            target.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { map ->
                 var denyPermissions: ArrayList<String> = ArrayList()
 
                 for (entry in map.entries) {
@@ -69,6 +74,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 퍼미션이 하나일 때 Launcher 초기화(선택)
+     * @author 배우람
      */
     fun setLaunchSinglePermissions(launcher: ActivityResultLauncher<String>): PermissionChecker {
         this@PermissionChecker.launchPermission = launcher
@@ -77,6 +83,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 퍼미션이 다수일 때, Launcher 초기화(선택)
+     * @author 배우람
      */
     fun setLaunchMultiplePermissions(launcher: ActivityResultLauncher<Array<String>>): PermissionChecker {
         this@PermissionChecker.launchMultiplePermissions = launcher
@@ -85,6 +92,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 퍼미션을 요청하기 위한 타깃 설정(필수)
+     * @author 배우람
      */
     override fun target(target: AppCompatActivity): Permission.Listener {
         this@PermissionChecker.target = target
@@ -93,17 +101,18 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 퍼미션에 따른 이벤트 처리 설정(필수)
+     * @author 배우람
      */
     override fun setPermissionListener(permissionListener: Permission.PermissionListener): Permission.Request {
         this@PermissionChecker.permissionListener = permissionListener
         return this@PermissionChecker
     }
-    
+
     override fun setSinglePermissionShowListener(showListener: Permission.ShowListener<String>): Permission.Request {
         this@PermissionChecker.singlePermissionShowListener = showListener
         return this@PermissionChecker
     }
-    
+
     override fun setMultiPermissionShowListener(showListener: Permission.ShowListener<Array<String>>): Permission.Request {
         this@PermissionChecker.multiPermissionShowListener = showListener
         return this@PermissionChecker
@@ -111,6 +120,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
     /**
      * 요청할 퍼미션 설정(필수)
+     * @author 배우람
      */
     override fun request(permissions: Array<String>): Permission.Checker {
         this@PermissionChecker.permissions = permissions
@@ -122,7 +132,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
             //퍼미션 시작 전 검증 과정
             val verify = checkPermissionVerification()
 
-            if(verify != PermissionVerificationType.OK) {
+            if(verify != PermissionVerifyResult.OK) {
                 Log.d(debugTag, "checkPermissionVerification() result = ${verify.name}")
                 return
             }
@@ -136,29 +146,30 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
         /**
          * 퍼미션 시작 전 검증 단계 진행
-         *
+         * @author 배우람
          */
-        private fun checkPermissionVerification(): PermissionVerificationType {
+        private fun checkPermissionVerification(): PermissionVerifyResult {
             if (launchMultiplePermissions == null && launchPermission == null)
-                return PermissionVerificationType.NOT_INIT_LAUNCH
+                return PermissionVerifyResult.NOT_INIT_LAUNCH
 
             if (target == null)
-                return PermissionVerificationType.NOT_INIT_TARGET
+                return PermissionVerifyResult.NOT_INIT_TARGET
 
             if (permissions == null)
-                return PermissionVerificationType.NOT_INIT_PERMISSION_DATA
+                return PermissionVerifyResult.NOT_INIT_PERMISSION_DATA
 
             if (permissions!!.isEmpty())
-                return PermissionVerificationType.EMPTY_PERMISSION_DATA
+                return PermissionVerifyResult.EMPTY_PERMISSION_DATA
 
             if (permissionListener == null)
-                return PermissionVerificationType.NOT_INIT_PERMISSION_LISTENER
+                return PermissionVerifyResult.NOT_INIT_PERMISSION_LISTENER
 
-            return PermissionVerificationType.OK
+            return PermissionVerifyResult.OK
         }
 
         /**
          * 퍼미션 하나일 때, 퍼미션 요청 진행
+         * @author 배우람
          */
         private fun singlePermissionCheck() {
             val requestPermissions = permissions!![0]
@@ -171,7 +182,6 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
                 ) == PackageManager.PERMISSION_GRANTED -> {
                     Log.d(debugTag, "singleExecute() requestPermission = $requestPermissions")
                     isGrantPermission = true
-                    permissionListener!!.onGrantedPermission()
                 }
 
                 //퍼미션 거절 시 UI 보여주기
@@ -194,6 +204,7 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
 
         /**
          * 퍼미션이 다수일 때, 퍼미션 요청 진행
+         * @author 배우람
          */
         private fun multiPermissionCheck() {
             val requestPermission = ArrayList<String>()
@@ -215,7 +226,6 @@ class PermissionChecker : Permission.Target, Permission.Listener, Permission.Req
                 //퍼미션 모두 허가일 때
                 requestPermission.isEmpty() -> {
                     isGrantPermission = true
-                    permissionListener!!.onGrantedPermission()
                 }
 
                 //퍼미션 거절 시 UI 보여주기
